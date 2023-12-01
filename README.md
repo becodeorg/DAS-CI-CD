@@ -1,26 +1,26 @@
 # DAS-CI-CD
 
 ## Jour 1 : Automatisation Avancée avec GitLab CI/CD
-Matin : Configuration de Pipeline
+**Matin : Configuration de Pipeline**
 
 - Révision rapide de GitLab CI/CD et de ses concepts de base.
 
 - Création d'un pipeline CI/CD pour un projet NestJS.
 
-Après-midi : Tests Automatisés et Déploiement
+**Après-midi : Tests Automatisés et Déploiement**
 
 - Configuration des tests automatisés pour un projet Angular.
 
 - Création d'un pipeline de déploiement avec Docker dans un environnement DEV.
 
 ## Jour 2 : Personnalisation et Bonnes Pratiques
-Matin : Gestion Avancée et Personnalisation
+**Matin : Gestion Avancée et Personnalisation**
 
 - Personnalisation des runners GitLab pour répondre aux besoins spécifiques du projet.
 
 - Planification avancée (scheduling) pour les tests E2E.
 
-Après-midi : Sécurité et Bonnes Pratiques
+**Après-midi : Sécurité et Bonnes Pratiques**
 
 - Configuration de la sécurité du référentiel GitLab, y compris les branches protégées et les revues de code.
 
