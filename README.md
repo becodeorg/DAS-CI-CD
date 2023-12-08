@@ -4,7 +4,7 @@
 **Matin : Configuration de Pipeline**
 
 ### Révision rapide de GitLab CI/CD et de ses concepts de base.
-- 1. Concepts de base de GitLab CI/CD (30 minutes)
+1. Concepts de base de GitLab CI/CD (30 minutes)
   - a. Pipeline
   - b. Jobs et stage
   - c. Runners
