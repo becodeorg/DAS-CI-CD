@@ -5,9 +5,9 @@
 
 ### Révision rapide de GitLab CI/CD et de ses concepts de base.
 1. Concepts de base de GitLab CI/CD (30 minutes)
-   1.1 Pipeline
-   1.2 Jobs et stage
-   1.3 Runners
+   - Pipeline
+   - Jobs et stage
+   - Runners
 
 ### Création d'un pipeline CI/CD pour un projet NestJS.
 **Après-midi : Tests Automatisés et Déploiement**
