@@ -3,10 +3,13 @@
 ## Jour 1 : Automatisation Avancée avec GitLab CI/CD
 **Matin : Configuration de Pipeline**
 
-- Révision rapide de GitLab CI/CD et de ses concepts de base.
+### Révision rapide de GitLab CI/CD et de ses concepts de base.
+- 1. Concepts de base de GitLab CI/CD (30 minutes)
+  - a. Pipeline
+  - b. Jobs et stage
+  - c. Runners
 
-- Création d'un pipeline CI/CD pour un projet NestJS.
-
+### Création d'un pipeline CI/CD pour un projet NestJS.
 **Après-midi : Tests Automatisés et Déploiement**
 
 - Configuration des tests automatisés pour un projet Angular.
