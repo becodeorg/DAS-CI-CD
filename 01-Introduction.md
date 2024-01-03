@@ -56,6 +56,16 @@ est déclenché automatiquement lorsqu'un commit est poussé sur la branche conf
 
 ## Installation (2 Heures) 
 
-- [Installation sur ubuntu](https://about.gitlab.com/install/#ubuntu)
+Connectez vous à la vm.
+
+- IP User 1  
+- IP User 2
+- IP User 3
+- IP User 4
+- IP User 5  
+
+user : admin
+
+- [Installation sur debian](https://about.gitlab.com/install/#debian)
 - [Next Steps](https://docs.gitlab.com/ee/install/next_steps.html)
   
