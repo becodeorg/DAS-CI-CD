@@ -81,3 +81,18 @@ user : admin
 sudo apt-get update
 sudo apt-get install -y curl openssh-server ca-certificates perl
 ```
+
+### 2. Installation de GitLab package 
+**Repository setup**
+```
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
+```
+**Installation des packages**
+```
+sudo apt-get install gitlab-ee
+```
+
+### 3. Browse to the hostname and login
+```
+/etc/gitlab/initial_root_password
+```
