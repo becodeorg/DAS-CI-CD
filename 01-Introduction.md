@@ -88,7 +88,6 @@ sudo apt-get install -y curl openssh-server ca-certificates perl
 curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
 ```
 ### 3. Configuration et installation 
-**Edition du fichier gitlab.rc**
 ```
 sudo GITLAB_ROOT_PASSWORD="<strongpassword>" EXTERNAL_URL="http://gitlab.example.com" apt install gitlab-ee
 ```
