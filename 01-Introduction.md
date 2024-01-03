@@ -70,7 +70,7 @@ ssh admin@YOUR-IP -i userX.pem
 
 user : admin
 
-** Documentation :** 
+**Documentation :** 
 - [Installation sur debian](https://about.gitlab.com/install/#debian)
 - [Next Steps](https://docs.gitlab.com/ee/install/next_steps.html)
   
