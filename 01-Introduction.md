@@ -58,6 +58,10 @@ est déclenché automatiquement lorsqu'un commit est poussé sur la branche conf
 
 Connectez vous à la vm.
 
+```
+ssh admin@`YOUR-IP`` -i userX.pem
+```
+
 - IP User 1  
 - IP User 2
 - IP User 3
