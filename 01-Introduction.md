@@ -54,7 +54,7 @@ est déclenché automatiquement lorsqu'un commit est poussé sur la branche conf
 
 ![](https://docs.gitlab.com/ee/ci/jobs/img/pipeline_grouped_jobs_v14_2.png)
 
-## Installation (30 minutes) 
+## Installation (2 Heures) 
 
 - [Installation sur ubuntu](https://about.gitlab.com/install/#ubuntu)
 - [Next Steps](https://docs.gitlab.com/ee/install/next_steps.html)
