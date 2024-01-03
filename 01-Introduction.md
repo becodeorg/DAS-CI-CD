@@ -59,7 +59,7 @@ est déclenché automatiquement lorsqu'un commit est poussé sur la branche conf
 Connectez vous à la vm.
 
 ```
-ssh admin@`YOUR-IP`` -i userX.pem
+ssh admin@YOUR-IP -i userX.pem
 ```
 
 - IP User 1  
@@ -70,6 +70,14 @@ ssh admin@`YOUR-IP`` -i userX.pem
 
 user : admin
 
+** Documentation :** 
 - [Installation sur debian](https://about.gitlab.com/install/#debian)
 - [Next Steps](https://docs.gitlab.com/ee/install/next_steps.html)
   
+
+### 1. Installation et configuration des dépendances
+
+```
+sudo apt-get update
+sudo apt-get install -y curl openssh-server ca-certificates perl
+```
