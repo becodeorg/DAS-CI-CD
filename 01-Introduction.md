@@ -87,27 +87,11 @@ sudo apt-get install -y curl openssh-server ca-certificates perl
 ```
 curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
 ```
-**Installation des packages**
-```
-sudo apt-get install gitlab-ee
-```
-
-### Configuration de la variale EXTERNAL_URL 
+### 3. Configuration et installation 
 **Edition du fichier gitlab.rc**
 ```
-sudo nano /etc/gitlab/gitlab.rc
-```
-**Modifictaion de l'url** (Si aucune mettre http://10.0.0.1)
-```
-external_url "http://gitlab.das.be"
-```
-**Reconfiguration**
-```
-sudo gitlab-ctl reconfigure
+sudo GITLAB_ROOT_PASSWORD="<strongpassword>" EXTERNAL_URL="http://gitlab.example.com" apt install gitlab-ee
 ```
 
-### 3. Browse to the hostname and login
-```
-/etc/gitlab/initial_root_password
-```
+
 
