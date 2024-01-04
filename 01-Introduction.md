@@ -87,6 +87,10 @@ On fait un upgrade
 
 ```
 sudo apt-get upgrade -y
+```
+
+On installe les dépendances 
+```
 sudo apt-get install -y curl openssh-server ca-certificates perl
 ```
 
