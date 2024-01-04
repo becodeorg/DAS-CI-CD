@@ -81,6 +81,10 @@ user : admin
 sudo apt-get update
 sudo apt-get install -y curl openssh-server ca-certificates perl
 ```
+On install postfix  
+```
+sudo apt-get install -y postfix
+```
 
 ### 2. Installation de GitLab package 
 **Repository setup**
