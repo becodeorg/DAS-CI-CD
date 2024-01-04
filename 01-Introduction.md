@@ -77,16 +77,10 @@ user : admin
 
 ### 1. Installation et configuration des dépendances
 
-On fait un update
+On fait un update 
  
 ```
-sudo apt-get update -y
-```
-
-On fait un upgrade
-
-```
-sudo apt-get upgrade -y
+sudo apt-get update -y && sudo apt-get upgrade -y
 ```
 
 On installe les dépendances 
