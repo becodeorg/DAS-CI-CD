@@ -116,6 +116,10 @@ curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.de
 
 ### 3. Configuration et installation
 
+**Minimum requirement :**
+- 4 core
+- 4 G de ram
+
 On lance l'installation de gitlab
 
 ```
