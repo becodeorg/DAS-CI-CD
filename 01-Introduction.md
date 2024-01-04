@@ -96,5 +96,11 @@ curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.de
 sudo GITLAB_ROOT_PASSWORD="<strongpassword>" EXTERNAL_URL="http://gitlab.example.com" apt install gitlab-ee
 ```
 
+### 4. Gilab start
+```
+sudo gitlab-ctl restart
+```
+
+
 
 
