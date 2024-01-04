@@ -108,6 +108,11 @@ On ajoute gitlab dans la liste des paquets Debian
 ```
 curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
 ```
+ou la version community
+
+```
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
+```
 
 ### 3. Configuration et installation
 
@@ -115,6 +120,10 @@ On lance l'installation de gitlab
 
 ```
 sudo GITLAB_ROOT_PASSWORD="<strongpassword>" EXTERNAL_URL="http://gitlab.example.com" apt install gitlab-ee
+```
+ou 
+```
+sudo GITLAB_ROOT_PASSWORD="<strongpassword>" EXTERNAL_URL="http://gitlab.example.com" apt install gitlab-ce
 ```
 
 ### 4. Gitlab start
