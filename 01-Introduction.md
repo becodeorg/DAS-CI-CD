@@ -77,28 +77,46 @@ user : admin
 
 ### 1. Installation et configuration des dépendances
 
+On fait un update
+ 
 ```
-sudo apt-get update
+sudo apt-get update -y
+```
+
+On fait un upgrade
+
+```
+sudo apt-get upgrade -y
 sudo apt-get install -y curl openssh-server ca-certificates perl
 ```
-On install postfix  
+
+On install postfix pour l'envoie d'email  
+
 ```
 sudo apt-get install -y postfix
 ```
 
 ### 2. Installation de GitLab package 
 **Repository setup**
+
+On ajoute gitlab dans la liste des paquets Debian 
+
 ```
 curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
 ```
-### 3. Configuration et installation 
+
+### 3. Configuration et installation
+
+On lance l'installation de gitlab
+
 ```
 sudo GITLAB_ROOT_PASSWORD="<strongpassword>" EXTERNAL_URL="http://gitlab.example.com" apt install gitlab-ee
 ```
 
 ### 4. Gitlab start
+
 ```
-sudo gitlab-ctl restart
+sudo gitlab-ctl reconfigure
 ```
 
 
