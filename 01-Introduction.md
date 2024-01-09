@@ -55,6 +55,9 @@ est déclenché automatiquement lorsqu'un commit est poussé sur la branche conf
 ![](https://docs.gitlab.com/ee/ci/jobs/img/pipeline_grouped_jobs_v14_2.png)
 
 ## Installation (2 Heures) 
+**Minimum requirement :**
+- 4 core
+- 4 G de ram
 
 Connectez vous à la vm.
 
@@ -110,9 +113,6 @@ curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.de
 
 ### 3. Configuration et installation
 
-**Minimum requirement :**
-- 4 core
-- 4 G de ram
 
 On lance l'installation de gitlab
 
