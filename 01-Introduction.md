@@ -56,7 +56,7 @@ est déclenché automatiquement lorsqu'un commit est poussé sur la branche conf
 
 ## Installation (2 Heures) 
 **Minimum requirement :**
-- 4 core
+- 4 core CPU
 - 4 G de ram
 
 Connectez vous à la vm.
