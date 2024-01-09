@@ -126,6 +126,8 @@ sudo GITLAB_ROOT_PASSWORD="<strongpassword>" EXTERNAL_URL="http://gitlab.example
 
 ### 4. Gitlab start
 
+Si l'url doit être modifié, il faut relancer la configuration.
+
 ```
 sudo gitlab-ctl reconfigure
 ```
