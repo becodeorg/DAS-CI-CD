@@ -124,6 +124,20 @@ ou la version community
 sudo GITLAB_ROOT_PASSWORD="<strongpassword>" EXTERNAL_URL="http://gitlab.example.com" apt install gitlab-ce
 ```
 
+### 4. Configuration du serveur SMTP
+En fonction du serveur smtp :
+- https://docs.gitlab.com/omnibus/settings/smtp.html
+
+
+### 5. Installation Gitlab Runner
+```bash
+curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
+```
+
+Et ensuite :  
+```
+sudo apt-get install gitlab-runner
+```
 
 
 
