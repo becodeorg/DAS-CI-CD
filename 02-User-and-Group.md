@@ -36,14 +36,14 @@ Les utilisateurs validés ont accès à des minutes d'intégration continue grat
 Un groupe, c'est l'équivalent d'une organisation sur github. Pour en créer un, il suffit de cliquer sur le ```+`` en haut à gauche.  
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/228c432f-f8f6-4f54-999a-325abd85dd05)
 
-On peut importer un groupe d'une autrte instance de gitlab ou en créer un.
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/8262852c-d0e5-4117-9c4d-7cd4566200e4)
+On peut importer un groupe d'une autrte instance de gitlab ou en créer un.  
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/8262852c-d0e5-4117-9c4d-7cd4566200e4)  
 
-On y indique le nom
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/07825209-8097-4434-b68f-490098595c4b)
+On y indique le nom  
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/07825209-8097-4434-b68f-490098595c4b)  
 
-Et on change la visibilité 
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/dff0c739-5d14-4a8c-ac93-dfc139193ce8)
+Et on change la visibilité   
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/dff0c739-5d14-4a8c-ac93-dfc139193ce8)  
 
 * **Public :** Pour que les projets soient ouvertement visibles par tout le monde, par exemple pour des projets open source.
 
