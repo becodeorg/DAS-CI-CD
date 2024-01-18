@@ -29,7 +29,7 @@ Ils ont le plus haut niveau de privilèges, ce qui leur permet de configurer et 
 Les utilisateurs externes ne peuvent pas voir les projets internes ou privés à moins que l'accès ne leur soit explicitement accordé.
 Ils ne peuvent pas créer de projets, de groupes, ni de fragments de code personnels. Cela limite leur capacité à contribuer à des projets ou à créer du contenu dans GitLab.
 
-La dernière option ``Validate user account`` permet de se valider soi-même en saisissant les détails de leur carte de crédit.
+La dernière option ``Validate user account`` permet de valider soi-même en saisissant les détails de leur carte de crédit.
 Les utilisateurs validés ont accès à des minutes d'intégration continue gratuites sur des runners partagés. L'intégration continue est une pratique de développement logiciel qui consiste à vérifier automatiquement le code à chaque modification, et les runners sont des environnements d'exécution pour ces vérifications.
 
 ## 3. Création d'un groupe
