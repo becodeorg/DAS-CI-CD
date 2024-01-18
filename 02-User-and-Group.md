@@ -1,7 +1,7 @@
 # Configuartion des users et des groupes
 
 ## 1. Mode admin
-Tout d'abord, il faut passer en mode Admin.  Pour ce faire il faut cliquer en bas à gauche sur "Admin Area".
+Tout d'abord, il faut passer en mode Admin.  Pour ce faire il faut cliquer en bas à gauche sur ``Admin Area``.
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/073cc528-93b5-4a0b-81df-c62f793a8b42)
 
