@@ -29,10 +29,25 @@ Ils ont le plus haut niveau de privilèges, ce qui leur permet de configurer et 
 Les utilisateurs externes ne peuvent pas voir les projets internes ou privés à moins que l'accès ne leur soit explicitement accordé.
 Ils ne peuvent pas créer de projets, de groupes, ni de fragments de code personnels. Cela limite leur capacité à contribuer à des projets ou à créer du contenu dans GitLab.
 
-La dernière option ``Validate user account`` permet de valider soi-même en saisissant les détails de leur carte de crédit.
+La dernière option ``Validate user account`` permet à l'utilisateur de valider les détails de leur carte de crédit.
 Les utilisateurs validés ont accès à des minutes d'intégration continue gratuites sur des runners partagés. L'intégration continue est une pratique de développement logiciel qui consiste à vérifier automatiquement le code à chaque modification, et les runners sont des environnements d'exécution pour ces vérifications.
 
 ## 3. Création d'un groupe
+Un groupe, c'est l'équivalent d'une organisation sur github. Pour en créer un, il suffit de cliquer sur le ```+`` en haut à gauche.  
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/228c432f-f8f6-4f54-999a-325abd85dd05)
 
+On peut importer un groupe d'une autrte instance de gitlab ou en créer un.
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/8262852c-d0e5-4117-9c4d-7cd4566200e4)
 
+On y indique le nom
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/07825209-8097-4434-b68f-490098595c4b)
+
+Et on change la visibilité 
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/dff0c739-5d14-4a8c-ac93-dfc139193ce8)
+
+* **Public :** Pour que les projets soient ouvertement visibles par tout le monde, par exemple pour des projets open source.
+
+* **Internal :** Pour que les projets soient privés mais que tous les membres de l'organisation y aient accès.
+
+* **Private :** Pour un besoin d'un haut niveau de confidentialité et que seuls les membres spécifiques du repo peuvent y accéder.
 
