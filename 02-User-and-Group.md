@@ -17,23 +17,21 @@ L'option ``Projects limit`` definit le nombre de repo que pourra créer l'utilis
 
 Il faut également déterminer le niveau d'accès de l'utilisateur.
 
-* Regular :  
+* **Regular :**  
 Les utilisateurs réguliers ont accès à leurs propres groupes et projets dans GitLab.
 Cela signifie qu'ils peuvent travailler sur les projets auxquels ils sont associés, créer de nouveaux projets dans ces groupes, et utiliser les fonctionnalités associées à leurs projets spécifiques.
 
-* Administrator :  
+* **Administrator :**  
 Les administrateurs ont un accès illimité à tous les groupes, projets, utilisateurs et fonctionnalités de GitLab.
 Ils ont le plus haut niveau de privilèges, ce qui leur permet de configurer et de gérer l'ensemble du système GitLab, y compris les droits d'accès des autres utilisateurs.
 
-* External (Utilisateur externe) :
+* **External (Utilisateur externe) :**
 Les utilisateurs externes ne peuvent pas voir les projets internes ou privés à moins que l'accès ne leur soit explicitement accordé.
 Ils ne peuvent pas créer de projets, de groupes, ni de fragments de code personnels. Cela limite leur capacité à contribuer à des projets ou à créer du contenu dans GitLab.
 
-Validation du compte utilisateur :
 
-Les utilisateurs peuvent se valider eux-mêmes en saisissant les détails de leur carte de crédit/débit.
-Alternativement, un administrateur peut valider manuellement un utilisateur.
-Les utilisateurs validés ont accès à des minutes d'intégration continue (CI) gratuites sur des runners partagés. L'intégration continue est une pratique de développement logiciel qui consiste à vérifier automatiquement le code à chaque modification, et les runners sont des environnements d'exécution pour ces vérifications.
+La dernière option ``Validate user account`` permet de se valider eux-mêmes en saisissant les détails de leur carte de crédit/débit.
+Les utilisateurs validés ont accès à des minutes d'intégration continue gratuites sur des runners partagés. L'intégration continue est une pratique de développement logiciel qui consiste à vérifier automatiquement le code à chaque modification, et les runners sont des environnements d'exécution pour ces vérifications.
 
 ## 3. Création d'un groupe
 
