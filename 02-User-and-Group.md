@@ -33,7 +33,7 @@ La dernière option ``Validate user account`` permet à l'utilisateur de valider
 Les utilisateurs validés ont accès à des minutes d'intégration continue gratuites sur des runners partagés. L'intégration continue est une pratique de développement logiciel qui consiste à vérifier automatiquement le code à chaque modification, et les runners sont des environnements d'exécution pour ces vérifications.
 
 ## 3. Création d'un groupe
-Un groupe, c'est l'équivalent d'une organisation sur github. Pour en créer un, il suffit de cliquer sur le ```+`` en haut à gauche.  
+Un groupe, c'est l'équivalent d'une organisation sur github. Pour en créer un, il suffit de cliquer sur le ``+`` en haut à gauche.  
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/228c432f-f8f6-4f54-999a-325abd85dd05)
 
 On peut importer un groupe d'une autrte instance de gitlab ou en créer un.  
