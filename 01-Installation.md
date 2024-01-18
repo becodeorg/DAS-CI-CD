@@ -54,7 +54,7 @@ est déclenché automatiquement lorsqu'un commit est poussé sur la branche conf
 
 ![](https://docs.gitlab.com/ee/ci/jobs/img/pipeline_grouped_jobs_v14_2.png)
 
-## Installation (2 Heures) 
+## Installation 
 **Minimum requirement :**
 - 4 core CPU
 - 4 G de ram
