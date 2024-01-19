@@ -102,6 +102,10 @@ Maintenant, on va pouvoir enregistrer le runner.
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/e96ef94a-02c9-4774-99e1-5cb789085572)
 
+````
+sudo gitlab-runner register  --url http://34.243.1.181  --token glrt-xkoyTMSpyfEsk6-DPYLS
+````
+
 et pour vérifier que le runner a bien été créer : 
 
 ```
