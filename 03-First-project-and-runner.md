@@ -73,4 +73,21 @@ Pour créer un runner, il faut aller dans l'onglet ``settings`` dans le menu à 
 On choisit le runner ppour Linux. Il faut également y indiquer un tag, mmais on verra plus tard tard comment l'utiliser.
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/104c579e-45fe-4b70-8ee4-ae34f47feeb5)
 
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/beaba3cc-c4c3-4de4-a1ee-78e4705f387f)
+
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/b4300593-4a68-48d5-bc03-ede4f9e0d661)
+
+Maintenant, on va pouvoir enregistrer le runner. 
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/a4773056-007a-4e89-b677-905ba71967f3)
+
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/18a44719-3e1c-4027-bf43-1bcd930e89c6)
+
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/e96ef94a-02c9-4774-99e1-5cb789085572)
+
+et pour vérifier que le runner a bien été créer : 
+
+```
+sudo cat /etc/gitlab-runner/config.toml
+```
+
 
