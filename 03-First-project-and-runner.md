@@ -95,7 +95,7 @@ On choisit le runner pour Linux. Il faut également y indiquer un tag, mmais on 
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/b4300593-4a68-48d5-bc03-ede4f9e0d661)
 
-Maintenant, on va pouvoir enregistrer le runner. 
+Maintenant, on va pouvoir enregistrer le runner (en sudo). 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/a4773056-007a-4e89-b677-905ba71967f3)
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/18a44719-3e1c-4027-bf43-1bcd930e89c6)
