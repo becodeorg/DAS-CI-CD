@@ -67,7 +67,7 @@ est déclenché automatiquement lorsqu'un commit est poussé sur la branche conf
 ![](https://docs.gitlab.com/ee/ci/jobs/img/pipeline_grouped_jobs_v14_2.png)
 
 ## Création du premier runner
-Création du fichier .gitlab.yaml
+Création du fichier ``.gitlab.yaml``   
 ```
 stages:
   - build
