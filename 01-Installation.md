@@ -84,6 +84,10 @@ Et ensuite :
 sudo apt-get install gitlab-runner
 ```
 
-
+Vérification du status de gitlab-runner
+```
+sudo gitlab-runner stattus
+```
+ 
 
 
