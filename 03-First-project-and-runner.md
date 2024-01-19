@@ -59,7 +59,7 @@ job_deploy:
   script:
     - echo "Deploying the application..."
 ```
-### Conclusion 
+
 En résumé, dans GitLab CI/CD, vous définissez des jobs pour effectuer des tâches spécifiques, 
 les regroupez en étapes logiques, et ces étapes sont ensuite regroupées dans un pipeline qui 
 est déclenché automatiquement lorsqu'un commit est poussé sur la branche configurée.
