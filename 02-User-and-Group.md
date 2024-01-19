@@ -49,5 +49,5 @@ Et on change la visibilité
 
 * **Internal :** Pour que les projets soient privés mais que tous les membres de l'organisation y aient accès.
 
-* **Private :** Pour un besoin d'un haut niveau de confidentialité et que seuls les membres spécifiques du repo peuvent y accéder.
+* **Private :** Pour un besoin d'un haut niveau de confidentialité et seuls les membres spécifiques du repo peuvent y accéder.
 
