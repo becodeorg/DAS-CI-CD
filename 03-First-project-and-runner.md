@@ -119,8 +119,9 @@ Si l'on teste en décochant la case, les runners resteront avec le statut pendin
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/aca186a2-d9ff-4c6b-96be-ce98c43987df)
 
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/58540f96-5c4c-44e6-a2ae-d83dfd065614)
+Si l'on modifie  le fichier ```gitlab-ci.yaml```, et que l'on rajoute un tag, on peut voir que seul le job qui a un tag sera lancé.
 
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/58540f96-5c4c-44e6-a2ae-d83dfd065614)
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/20a0699d-e3e1-4dcd-a8ca-10018abe4f86)
 
