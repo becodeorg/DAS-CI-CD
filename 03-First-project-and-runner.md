@@ -88,7 +88,7 @@ job_test:
 Pour créer un runner, il faut aller dans l'onglet ``settings`` dans le menu à gauche et on étend la rubrique ``Runners``
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/21668686-45ef-49e9-a74f-cb736d03cf19)
 
-On choisit le runner pour Linux. Il faut également y indiquer un tag, mmais on verra plus tard tard comment l'utiliser.
+On choisit le runner pour Linux. Il faut également y indiquer un tag, mais on verra plus tard tard comment l'utiliser.
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/104c579e-45fe-4b70-8ee4-ae34f47feeb5)
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/beaba3cc-c4c3-4de4-a1ee-78e4705f387f)
