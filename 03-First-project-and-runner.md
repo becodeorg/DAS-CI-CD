@@ -34,7 +34,7 @@ stages:
   - deploy
 ```
 
-### Pipelines
+### Pipeline
 Chaque fois qu'un commit est effectué sur une branche surveillée (par exemple, la branche principale), 
 GitLab déclenche automatiquement la création d'un nouveau pipeline. Ce pipeline est un ensemble de "jobs" organisés en "Stages" (étapes).  
 
