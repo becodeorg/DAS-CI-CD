@@ -82,13 +82,12 @@ job_test:
   stage: test
   script:
     - echo "Running tests"
-
 ```
 
 Pour créer un runner, il faut aller dans l'onglet ``settings`` dans le menu à gauche et on étend la rubrique ``Runners``
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/21668686-45ef-49e9-a74f-cb736d03cf19)
 
-On choisit le runner pour Linux. Il faut également y indiquer un tag, mais on verra plus tard tard comment l'utiliser.
+On choisit le runner pour Linux. Il faut également y indiquer un tag, mais on verra plus tard comment l'utiliser.
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/104c579e-45fe-4b70-8ee4-ae34f47feeb5)
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/beaba3cc-c4c3-4de4-a1ee-78e4705f387f)
@@ -111,5 +110,13 @@ et pour vérifier que le runner a bien été créer :
 ```
 sudo cat /etc/gitlab-runner/config.toml
 ```
+
+## Les tags 
+Pour que le précédent runner puisse fonctionner, nous avons coché la case ``Run untagged jobs``. 
+Pour gérer efficacement les runners, il est préférable d'utiliser les tags afin de les réutiliser tant que possible.
+Si l'on teste en décochant la case, les runners resteront avec le statut pending. 
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/4ab591a6-da87-4dae-ad7f-eb2c00107033)
+
+![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/aca186a2-d9ff-4c6b-96be-ce98c43987df)
 
 
