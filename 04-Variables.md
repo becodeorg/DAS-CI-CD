@@ -4,17 +4,17 @@
 <br>
 
 * très importantes et utiles :
-		* secrets
-		* sha1 commit
-		* taguer des images
-		* partager entre les jobs
+	* secrets
+	* sha1 commit
+	* taguer des images
+	* partager entre les jobs
 
 * différents types de variables :
-		* les variables prédéfinies
-		* du fichier gitlab-ci : local vs global (job)
-		* du projet (settings > cicd)
-		* du groupe
-		* de l'instance
+	* les variables prédéfinies
+	* du fichier gitlab-ci : local vs global (job)
+	* du projet (settings > cicd)
+	* du groupe
+	* de l'instance
 
 --------------------------------------------------------------------------
 
