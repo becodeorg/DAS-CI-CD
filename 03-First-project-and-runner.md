@@ -129,3 +129,8 @@ Si l'on modifie  le fichier ```gitlab-ci.yaml```, et que l'on rajoute un tag, on
 
 
 
+## Les runners partagés
+Par défaut, les runners sont 'locked' lorsque qu'il est utilisé par un projet.
+![](https://media.discordapp.net/attachments/727923649738178571/1199291526434529280/image.png)
+
+
