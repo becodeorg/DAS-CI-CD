@@ -154,6 +154,24 @@ Et ensuite on lance le register
 docker exec -it gitlab-runner gitlab-runner register --url http://34.243.1.181  --token glrt-ys
 3N4ndE_h6eN47DmurZ
 ```
+Edition du fichier .gitlab-ci.yaml
+```yaml
+stages:          # List of stages for jobs, and their order of execution
+  - test
+
+hello-job:      # This job runs in the deploy stage.
+  stage: test  # It only runs when *both* jobs in the test stage complete successfully.
+  image: debian:latest
+  tags: 
+    - docker
+  script:
+    - echo "Start..."
+    - echo "*****************************************************************"
+    - echo "-----------------------------------------------------------------"
+    - sleep 30
+    - echo "Application successfully deployed."
+
+```
 
 ## Les runners partagés
 Par défaut, les runners sont 'locked' lorsque qu'il est utilisé par un autre projet.
