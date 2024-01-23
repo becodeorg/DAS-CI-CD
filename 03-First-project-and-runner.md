@@ -129,6 +129,31 @@ Si l'on modifie  le fichier ```gitlab-ci.yaml```, et que l'on rajoute un tag, on
 
 ## Runner docker
 
+> Gitlab > settings > CI/CD > Runners
+
+Specific/Shared runners
+
+- Doc : https://docs.gitlab.com/runner/install/index.html
+- Linux : https://docs.gitlab.com/runner/install/linux-manually.html
+
+Note : dns vers l'instance gitlab
+
+### Image Gitlab-runner
+```
+mkdir -p /data/
+docker run -d  \
+   --name gitlab-runner \
+   --restart always \
+   -v /var/run/docker.sock:/var/run/docker.sock \
+   -v /data/gitlab-runner:/etc/gitlab-runner \
+   gitlab/gitlab-runner:latest
+```
+
+Et ensuite on lance le register 
+```
+docker exec -it gitlab-runner gitlab-runner register --url http://34.243.1.181  --token glrt-ys
+3N4ndE_h6eN47DmurZ
+```
 
 ## Les runners partagés
 Par défaut, les runners sont 'locked' lorsque qu'il est utilisé par un autre projet.
