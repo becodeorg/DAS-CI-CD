@@ -127,10 +127,17 @@ Si l'on modifie  le fichier ```gitlab-ci.yaml```, et que l'on rajoute un tag, on
 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/2728c1b7-8f80-40b3-915b-470e444bb841)
 
+## Runner docker
 
 
 ## Les runners partagés
-Par défaut, les runners sont 'locked' lorsque qu'il est utilisé par un projet.
+Par défaut, les runners sont 'locked' lorsque qu'il est utilisé par un autre projet.
 ![](https://media.discordapp.net/attachments/727923649738178571/1199291526434529280/image.png)
+
+Si l'on veut que le runner soit utilisé par plusieurs projet, il faut décocher la case. 
+
+Ensuite, il faut activer le runner dans les paramètres CI//CD du dépot.
+![](https://cdn.discordapp.com/attachments/727923649738178571/1199293028712591380/image.png?ex=65c203ab&is=65af8eab&hm=d60cbe135dcd2ca6069a57193246049de02313f1623ee1619e3b9e729088b8a8&)
+
 
 
