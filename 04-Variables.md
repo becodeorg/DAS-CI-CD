@@ -106,7 +106,7 @@ start-job:
   tags:
     - shell
   variables:
-    VAR: "Hello Xavki !!" 
+    VAR: "Hello DAS !!" 
   script:
     - echo "Start..."
     - echo "$VAR"
