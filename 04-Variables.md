@@ -84,7 +84,7 @@ start-job:
   tags:
     - shell
   variables:
-    LOCAL_VAR: "Hello Xavki !!" 
+    LOCAL_VAR: "Hello DAS !!" 
   script:
     - echo "Start..."
     - echo "$LOCAL_VAR"
