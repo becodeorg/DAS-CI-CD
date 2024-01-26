@@ -33,13 +33,7 @@ sudo apt-get update -y && sudo apt-get upgrade -y
 
 On installe les dépendances 
 ```
-sudo apt-get install -y curl openssh-server ca-certificates perl
-```
-
-On install postfix pour l'envoie d'email  
-
-```
-sudo apt-get install -y postfix
+sudo apt-get install -y curl openssh-server ca-certificates perl postfix
 ```
 
 ## 2. Installation de GitLab package 
