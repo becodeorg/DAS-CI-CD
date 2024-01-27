@@ -1,0 +1,21 @@
+# Les services
+Les services sont des conteneurs Docker qui peuvent être liés à vos jobs pour 
+fournir des dépendances ou des services nécessaires à l'exécution de vos tests ou de votre pipeline. 
+
+L'utilisation de services est particulièrement utile lorsque vous souhaitez isoler votre job 
+et ses dépendances sans avoir à installer ces dépendances directement sur le runner. 
+Les services peuvent être démarrés avant l'exécution du job et arrêtés après son achèvement.
+
+
+```yaml
+stages:
+  - test
+
+job_with_service:
+  stage: test
+  services:
+    - postgres:latest
+  script:
+    - echo "Running tests with PostgreSQL service"
+    - # Your test commands go here
+```
