@@ -110,6 +110,10 @@ et pour vérifier que le runner a bien été créer :
 ```
 sudo cat /etc/gitlab-runner/config.toml
 ```
+Différence entre User-mode et system-mode
+Dans user mode, les runners que vous inscrivez ne fonctionneront que pour l'utilisateur actuel. Si vous vous connectez depuis un autre utilisateur, les exécuteurs ne seront pas disponibles pour votre pipeline et si vous essayez d'exécuter votre pipeline, cela sera  bloqué du fait qu'il n'y a aucun exécuteur disponible pour fonctionner.
+
+Dans system mode, les coureurs que vous inscrivez seront disponibles pour courir et travailler tant que la machine est allumée, quel que soit l'utilisateur à partir duquel vous vous connectez.
 
 ## Les tags 
 Pour que le précédent runner puisse fonctionner, nous avons coché la case ``Run untagged jobs``. 
