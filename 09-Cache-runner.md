@@ -47,10 +47,10 @@ stages:
 job1:
     stage: stage1
     script: 
-        - mkdir -p .lib
-        - echo "Ceci est le cache partagé" > .lib/das.txt
+      - mkdir -p .lib
+      - echo "Ceci est le cache partagé" > .lib/das.txt
     rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+      - if: '$CI_COMMIT_BRANCH == "main"'
     tags:
       - docker
 job2:
