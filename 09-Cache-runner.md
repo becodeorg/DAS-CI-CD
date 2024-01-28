@@ -19,8 +19,8 @@ stages:
 job1:
     stage: stage1
     script: 
-        - mkdir -p .lib
-        - echo "Ceci est le cache partagé" > .lib/das.txt
+      - mkdir -p .lib
+      - echo "Ceci est le cache partagé" > .lib/das.txt
     tags:
       - docker
 job2:
