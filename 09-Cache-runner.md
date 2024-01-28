@@ -93,7 +93,7 @@ j2:
     - docker
 ```
 
-## Cache par Politique de Versions (cache:policy) :
+## Cache par Politique de Versions :
 
 La directive policy permet de spécifier une politique de cache, qui définit comment les caches doivent être gérés lors des différentes étapes du pipeline. Il existe trois valeurs possibles, pull, push et les deux combinés pull-push
 
