@@ -1,0 +1,42 @@
+# Les artefactes 
+Il existe deux manière dans gitlab de stocker des fichiers et de les partager. 
+- Cache
+- Et les artefacts
+## En quoi le cache est différent des artefacts
+- Utilisez le cache pour les dépendances, comme les packages que vous téléchargez sur Internet. Le cache est stocké là où GitLab Runner est installé.
+- Utilisez des artefacts pour transmettre les résultats de construction intermédiaires entre les étapes. Les artefacts sont générés par une tâche, stockés dans GitLab et peuvent être téléchargés.
+- **Durée de Vie :** Le cache persiste sur le runner entre les exécutions de jobs, tandis que les artefacts ne sont disponibles que pour la durée d'un pipeline.
+
+Les artefacts et les caches définissent leurs chemins par rapport au répertoire du projet et ne peuvent pas créer de lien vers des fichiers extérieurs à celui-ci.
+
+### Cache
+Le cache est utilisé pour stocker des fichiers ou des répertoires spécifiés afin de les réutiliser 
+entre différentes exécutions de jobs sur le même runner.
+Il s'agit d'une optimisation pour éviter de re-télécharger ou recréer des dépendances courantes.
+
+```
+job:
+  script:
+    - npm install
+  cache:
+    key: "$CI_COMMIT_REF_NAME-$CI_JOB_NAME"
+    paths:
+      - node_modules/
+  ```
+
+### Artefacts
+Les artefacts sont utilisés pour stocker des fichiers ou des répertoires produits pendant l'exécution d'un job. 
+Ces fichiers sont généralement les résultats de processus de construction, de tests, ou d'autres étapes du pipeline.
+
+```
+stages:
+  - build
+
+job_install_dependencies:
+  stage: build
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - node_modules/
+```
