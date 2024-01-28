@@ -6,7 +6,7 @@ de jobs sur le même runner.
 Cela permet d'améliorer les performances des pipelines en évitant la répétition 
 de certaines tâches, comme la compilation de dépendances ou le téléchargement de bibliothèques (comme npm). 
 
-```
+```yaml
 cache:
   key: my_cache_key
   paths:
