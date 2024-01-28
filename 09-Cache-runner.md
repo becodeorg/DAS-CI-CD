@@ -61,9 +61,34 @@ job2:
       - docker
 ```
 
-Le cache se vide aussi lorsque la key change. SI on utrilise une variable comme key, un nouveau sera utiliser à chaque run 
+Le cache se vide aussi lorsque la key change. SI on utrilise une variable comme key, un nouveau sera utiliser à chaque run.
 
 ```yaml
 cache:
   - key: $CI_COMMIT_REF_SLUG
+```
+
+Exemple 
+```yaml
+cache:
+  - key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .lib
+stages:
+  - step1
+  - step2
+j1:
+  stage: step1
+  script:
+    - mkdir -p .lib 
+    - echo $CI_COMMIT_REF_SLUG > .lib/$CI_COMMIT_REF_SLUG.txt
+  tags:
+    - docker
+j2:
+  stage: step2
+  script: 
+    - cat .lib/$CI_COMMIT_REF_SLUG.txt
+    - ls .lib/
+  tags:
+    - docker
 ```
