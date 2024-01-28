@@ -92,3 +92,12 @@ j2:
   tags:
     - docker
 ```
+
+## Cache par Politique de Versions (cache:policy) :
+
+Politique de cache par Versions : La directive policy permet de spécifier une politique de cache, qui définit comment les caches doivent être gérés lors des différentes étapes du pipeline. Il existe deux valeurs possibles : pull et push et les deux combinés pull-push
+
+- pull : Indique que le cache doit être téléchargé depuis un cache partagé ou distant avant l'exécution du job.
+- push : Indique que le cache doit être poussé (enregistré) après l'exécution du job pour être utilisé par d'autres jobs ou pipelines.
+- pull-push : fait les deux; c'est le mode par défaut
+
