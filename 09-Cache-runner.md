@@ -61,7 +61,7 @@ job2:
       - docker
 ```
 
-Le cache se vide aussi lorsque la key change. SI on utrilise une variable comme key, un nouveau sera utiliser à chaque run.
+Le cache se vide aussi lorsque la key change. SI on utrilise une variable comme key, un nouveau cache sera utiliser à chaque fois que le noom de la key change.
 
 ```yaml
 cache:
