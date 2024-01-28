@@ -95,9 +95,70 @@ j2:
 
 ## Cache par Politique de Versions (cache:policy) :
 
-Politique de cache par Versions : La directive policy permet de spécifier une politique de cache, qui définit comment les caches doivent être gérés lors des différentes étapes du pipeline. Il existe deux valeurs possibles : pull et push et les deux combinés pull-push
+La directive policy permet de spécifier une politique de cache, qui définit comment les caches doivent être gérés lors des différentes étapes du pipeline. Il existe trois valeurs possibles, pull, push et les deux combinés pull-push
 
 - pull : Indique que le cache doit être téléchargé depuis un cache partagé ou distant avant l'exécution du job.
 - push : Indique que le cache doit être poussé (enregistré) après l'exécution du job pour être utilisé par d'autres jobs ou pipelines.
 - pull-push : fait les deux; c'est le mode par défaut
 
+
+```yaml
+stages:
+  - step1
+  - step2
+j1-1:
+  stage: step1
+  script:
+    - mkdir -p .lib 
+    - echo $CI_COMMIT_REF_SLUG-$CI_JOB_STAGE > .lib/$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE.txt
+  cache:
+    - key: $CI_JOB_STAGE-$CI_COMMIT_REF_SLUG
+      paths:
+        - .lib
+      policy: pull
+  tags:
+    - docker
+j1-2:
+  stage: step1
+  script:
+    - cat .lib/$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE.txt
+    - ls .lib/
+  cache:
+    - key: $CI_JOB_STAGE-$CI_COMMIT_REF_SLUG
+      paths:
+        - .lib
+  tags:
+    - docker
+```
+
+Comme on a fait que un pull, il n'a pas mise à jour le cache et du coup il est indisponnible pour le second job.
+Editons le fichier et mettons le polycy avec la valeur push 
+
+```yaml
+stages:
+  - step1
+  - step2
+j1-1:
+  stage: step1
+  script:
+    - mkdir -p .lib 
+    - echo $CI_COMMIT_REF_SLUG-$CI_JOB_STAGE > .lib/$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE.txt
+  cache:
+    - key: $CI_JOB_STAGE-$CI_COMMIT_REF_SLUG
+      paths:
+        - .lib
+      policy: push
+  tags:
+    - docker
+j1-2:
+  stage: step1
+  script:
+    - cat .lib/$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE.txt
+    - ls .lib/
+  cache:
+    - key: $CI_JOB_STAGE-$CI_COMMIT_REF_SLUG
+      paths:
+        - .lib
+  tags:
+    - docker
+```
