@@ -60,3 +60,10 @@ job2:
     tags:
       - docker
 ```
+
+Le cache se vide aussi lorsque la key change. SI on utrilise une variable comme key, un nouveau sera utiliser à chaque run 
+
+```yaml
+cache:
+  - key: $CI_COMMIT_REF_SLUG
+```
