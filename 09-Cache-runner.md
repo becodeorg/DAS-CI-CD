@@ -34,3 +34,29 @@ job2:
 Mais si on y ajoute une règle pour que le job1 ne s'éxécute que sur la branche main, alors le job ne poourra que s'éxuter que si le fichier ``das.txt`` se trouve dans le cache. 
 Si le cache n'est plus présent, le button Build>Pipelines>Clear runner caches  permet de l'éffacer, cela générera une erreur car il ne trouvera pas le fichier. 
 
+```yaml
+cache:
+  key: my_cache_key
+  paths:
+    - .lib/
+    - node_modules/
+    - vendor/
+stages:
+  - stage1
+  - stage2
+job1:
+    stage: stage1
+    script: 
+        - mkdir -p .lib
+        - echo "Ceci est le cache partagé" > .lib/das.txt
+    rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    tags:
+      - docker
+job2:
+    stage: stage2
+    script:
+        - cat .lib/das.txt
+    tags:
+      - docker
+```
