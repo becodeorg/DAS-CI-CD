@@ -162,3 +162,19 @@ j1-2:
   tags:
     - docker
 ```
+
+
+## Pratiques recommandées pour la getsion du cache
+Pour garantir une disponibilité maximale du cache, effectuez une ou plusieurs des actions suivantes :
+
+* Étiquetez vos runners et utilisez l'étiquette sur les jobs qui partagent le cache.
+* Utilisez des runners disponibles uniquement pour un projet particulier.
+* Configurer un cache différent pour chaque branche.
+
+ Pour que les runners fonctionnent efficacement avec les caches, vous devez effectuer l'une des actions suivantes :
+
+* Utilisez un seul runner pour l'ensemble de vos jobs.
+* Utilisez plusieurs runners avec une mise en cache distribuée, où le cache est stocké dans des compartiments S3. Les runners partagés sur GitLab.com fonctionnent de cette manière. Ces runners peuvent être en mode d'auto-échelle, mais ce n'est pas obligatoire. Pour gérer les objets du cache, appliquez des règles de cycle de vie pour supprimer les objets du cache après une période donnée. Les règles de cycle de vie sont disponibles sur le serveur de stockage d'objets.
+* Utilisez plusieurs runners avec la même architecture et faites en sorte que ces runners partagent un répertoire commun monté en réseau pour stocker le cache. Ce répertoire doit utiliser NFS ou quelque chose de similaire. Ces runners doivent être en mode d'auto-échelle.
+
+
