@@ -88,5 +88,5 @@ Vérification du status de gitlab-runner
 sudo gitlab-runner status
 ```
  
-
+Bien mettre les droits sudo quand on register le runner.
 
