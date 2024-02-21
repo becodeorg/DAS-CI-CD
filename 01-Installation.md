@@ -90,3 +90,8 @@ sudo gitlab-runner status
  
 Bien mettre les droits sudo quand on register le runner.
 
+Une fois que tout cela est fini, nous devons rajouter l'ip de gitlab dans le fichier de config de gitlab-runner
+```
+[runners.docker]
+  extra_hosts = ["gitlab.das.becode:20.13.147.210","registry.das.becode:20.13.147.210"]
+```
