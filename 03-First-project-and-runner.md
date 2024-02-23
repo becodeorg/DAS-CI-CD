@@ -34,6 +34,9 @@ stages:
   - deploy
 ```
 
+Bon à savoir, il n'est pas obligatoire d'avoir des stages pour déclencher des jobs.
+Depuis quelques temps, gitlab permet de faire de "Stageless". 
+
 ### Pipeline
 Chaque fois qu'un commit est effectué sur une branche surveillée (par exemple, la branche principale), 
 GitLab déclenche automatiquement la création d'un nouveau pipeline. Ce pipeline est un ensemble de "jobs" organisés en "Stages" (étapes).  
