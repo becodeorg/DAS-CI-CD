@@ -51,3 +51,9 @@ Et on change la visibilité
 
 * **Private :** Pour un besoin d'un haut niveau de confidentialité et seuls les membres spécifiques du repo peuvent y accéder.
 
+
+### Exercice 
+- Creér un groupe par exemple ``BeCode``
+- Créer un utilisateur avec les droits admins
+
+
