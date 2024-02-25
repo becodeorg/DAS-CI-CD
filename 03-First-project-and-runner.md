@@ -69,6 +69,37 @@ job_deploy:
 ---
 
 ## Création du premier runner
+
+Les runners sont des sous-processus qui vont se charger de faire les commandes (scripts) que vous avez définies dans votre gitlab-ci. Gitlab-CI est capable de fonctionner de différente manière :
+
+- SSH
+- Shell
+- Parallels
+- VirtualBox
+- Docker
+- Docker Machine (auto-scaling)
+- Kubernetes
+- Custom
+
+
+---
+
+## Comment choisir ?
+
+**Shell**  
+C'est le plus simple de tous. Vos scripts seront lancés sur la machine qui possède le Runner.
+**Parallels, VirtualBox**   
+Le Runner va créer (ou utiliser) une machine virtuelle pour exécuter les scripts. Pratique pour avoir un environnement spécifique (exemple macOS)
+**Docker**  
+Utilise Docker pour créer / exécuter vos scripts et traitement (en fonction de la configuration de votre .gitlab-ci.yml)
+**Docker Machine (auto-scaling)**  
+Identique à docker, mais dans un environnement Docker multimachine avec auto-scaling.
+**Kubernetes**
+Lance vos builds dans un cluster Kubernetes. Très similaire à Docker-Machine
+**SSH**  
+À ne pas utiliser. Il existe, car il permet à Gitlab-CI de gérer l'ensemble des configurations possibles.
+
+---
 Création du fichier ``.gitlab-ci.yaml``   
 ```
 stages:
@@ -86,22 +117,11 @@ job_test:
     - echo "Running tests"
 ```
 
-Pour créer un runner, il faut aller dans l'onglet ``settings`` dans le menu à gauche et on étend la rubrique ``Runners``
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/21668686-45ef-49e9-a74f-cb736d03cf19)
+---
 
-On choisit le runner pour Linux. Il faut également y indiquer un tag, mais on verra plus tard comment l'utiliser.
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/104c579e-45fe-4b70-8ee4-ae34f47feeb5)
-
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/beaba3cc-c4c3-4de4-a1ee-78e4705f387f)
-
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/b4300593-4a68-48d5-bc03-ede4f9e0d661)
-
-Maintenant, on va pouvoir enregistrer le runner (en sudo). 
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/a4773056-007a-4e89-b677-905ba71967f3)
-
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/18a44719-3e1c-4027-bf43-1bcd930e89c6)
-
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/e96ef94a-02c9-4774-99e1-5cb789085572)
+- Pour créer un runner, il faut aller dans l'onglet ``settings`` dans le menu à gauche et on étend la rubrique ``Runners``
+- On choisit le runner pour Linux. Il faut également y indiquer un tag, mais on verra plus tard comment l'utiliser.
+- Enregistrer le runner (en sudo).
 
 ````
 sudo gitlab-runner register  --url http://34.243.1.181  --token glrt-xkoyTMSpyfEsk6-DPYLS
@@ -112,6 +132,11 @@ et pour vérifier que le runner a bien été créer :
 ```
 sudo cat /etc/gitlab-runner/config.toml
 ```
+---
+
+
+
+---
 
 ## Différence entre User-mode et system-mode
 **Mode Utilisateur (User Mode) :**  
@@ -122,6 +147,8 @@ sudo cat /etc/gitlab-runner/config.toml
 - Portée : Le runner est disponible pour tous les utilisateurs du système.
 - Permissions : Le runner aura généralement besoin de permissions élevées, car il peut être utilisé par n'importe quel utilisateur du système. Cela signifie qu'il peut accéder à des ressources qui nécessitent des privilèges élevés.
 
+---
+
 ### Avantages et inconvénients :
 **Mode Utilisateur :**  
 - Avantages : Isolation des ressources par utilisateur. Chaque utilisateur peut avoir son propre runner avec des configurations spécifiques.
@@ -131,52 +158,21 @@ sudo cat /etc/gitlab-runner/config.toml
 - Avantages : Disponible pour tous les utilisateurs, ce qui peut être pratique dans certains scénarios. Un seul runner peut être utilisé par tous les utilisateurs.
 - Inconvénients : Requiert généralement des privilèges élevés, ce qui peut représenter un risque de sécurité. Toutes les configurations seront partagées entre les utilisateurs et les tâches doivent être exécutées manuellement à l'aide de ``gitlab-runner run``
 
+---
 
 ## Les tags 
-Pour que le précédent runner puisse fonctionner, nous avons coché la case ``Run untagged jobs``. 
-Pour gérer efficacement les runners, il est préférable d'utiliser les tags afin de les réutiliser tant que possible.
 
-Si l'on teste en décochant la case, les runners resteront avec le statut pending. 
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/4ab591a6-da87-4dae-ad7f-eb2c00107033)
+---
 
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/aca186a2-d9ff-4c6b-96be-ce98c43987df)
+- Pour que le précédent runner puisse fonctionner, nous avons coché la case ``Run untagged jobs``. 
+- Pour gérer efficacement les runners, il est préférable d'utiliser les tags afin de les réutiliser tant que possible. 
+- Si l'on teste en décochant la case, les runners resteront avec le statut pending. 
+- Si l'on modifie  le fichier ```gitlab-ci.yaml```, et que l'on rajoute un tag, on peut voir que seul le job qui a un tag sera lancé.
 
-Si l'on modifie  le fichier ```gitlab-ci.yaml```, et que l'on rajoute un tag, on peut voir que seul le job qui a un tag sera lancé.
+---
 
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/58540f96-5c4c-44e6-a2ae-d83dfd065614)
-
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/20a0699d-e3e1-4dcd-a8ca-10018abe4f86)
-
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/2728c1b7-8f80-40b3-915b-470e444bb841)
-
-## Runner docker
-
-> Gitlab > settings > CI/CD > Runners
-
-Specific/Shared runners
-
-- Doc : https://docs.gitlab.com/runner/install/index.html
-- Linux : https://docs.gitlab.com/runner/install/linux-manually.html
-
-Note : dns vers l'instance gitlab
-
-### Image Gitlab-runner
-```
-mkdir -p /data/
-docker run -d  \
-   --name gitlab-runner \
-   --restart always \
-   -v /var/run/docker.sock:/var/run/docker.sock \
-   -v /data/gitlab-runner:/etc/gitlab-runner \
-   gitlab/gitlab-runner:latest
-```
-
-Et ensuite on lance le register 
-```
-docker exec -it gitlab-runner gitlab-runner register --url http://34.243.1.181  --token glrt-ys
-3N4ndE_h6eN47DmurZ
-```
 Edition du fichier .gitlab-ci.yaml
+
 ```yaml
 stages:          # List of stages for jobs, and their order of execution
   - test
@@ -194,6 +190,7 @@ hello-job:      # This job runs in the deploy stage.
     - echo "Application successfully deployed."
 
 ```
+---
 
 ## Les runners partagés
 Par défaut, les runners sont 'locked' lorsque qu'il est utilisé par un autre projet.
@@ -203,6 +200,14 @@ Si l'on veut que le runner soit utilisé par plusieurs projet, il faut décocher
 
 Ensuite, il faut activer le runner dans les paramètres CI//CD du dépot.
 ![](https://cdn.discordapp.com/attachments/727923649738178571/1199293028712591380/image.png?ex=65c203ab&is=65af8eab&hm=d60cbe135dcd2ca6069a57193246049de02313f1623ee1619e3b9e729088b8a8&)
+
+---
+
+## Exercice
+- Créer 2 runners **partagés**. 
+- L'un éxecutera du code shell et aura comme tag ``shell``
+- L'autre éxécutera un container docker et aura comme tag ``docker``
+
 
 
 
