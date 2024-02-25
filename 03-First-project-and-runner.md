@@ -198,8 +198,13 @@ Il faut activer le mode en admin pour les configurés ``Admin area``
 
 ## Exercice
 **Créez 2 runners partagés.**  
-L'un exécutera du code shell et aura comme tag shell.
-L'autre exécutera un conteneur Docker et aura comme tag docker, avec comme image par défaut debian:latest.
+- L'un exécutera du code shell et aura comme tag shell.
+- L'autre exécutera un conteneur Docker et aura comme tag docker, avec comme image par défaut ``debian:latest``.
+
+**Créer un fichier ``.gitlab-ci.yml``**
+- Avec 2 stages ``job_test`` et ``job_build``
+- Les deux jobs font un echo "Ceci est le job_test" et "Ceci est le job_build"
+  
 
 
 
