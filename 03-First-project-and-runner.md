@@ -55,9 +55,6 @@ job_deploy:
   script:
     - echo "Deploying the application..."
 ```
----
-![](https://docs.gitlab.com/ee/ci/jobs/img/pipeline_grouped_jobs_v14_2.png)
----
 
 ## Création du premier runner
 
