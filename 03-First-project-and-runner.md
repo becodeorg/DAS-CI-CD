@@ -197,7 +197,7 @@ Il faut activer le mode en admin pour les configurés ``Admin area``
 ---
 
 ## Exercice
-**Créez 2 runners partagés.**
+**Créez 2 runners partagés.**  
 L'un exécutera du code shell et aura comme tag shell.
 L'autre exécutera un conteneur Docker et aura comme tag docker, avec comme image par défaut debian:latest.
 
