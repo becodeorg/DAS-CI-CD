@@ -86,21 +86,22 @@ Les runners sont des sous-processus qui vont se charger de faire les commandes (
 
 ## Comment choisir ?
 
-**Shell**  
-C'est le plus simple de tous. Vos scripts seront lancés sur la machine qui possède le Runner.
-**Parallels, VirtualBox**   
-Le Runner va créer (ou utiliser) une machine virtuelle pour exécuter les scripts. Pratique pour avoir un environnement spécifique (exemple macOS)
-**Docker**  
-Utilise Docker pour créer / exécuter vos scripts et traitement (en fonction de la configuration de votre .gitlab-ci.yml)
-**Docker Machine (auto-scaling)**  
-Identique à docker, mais dans un environnement Docker multimachine avec auto-scaling.
-**Kubernetes**
-Lance vos builds dans un cluster Kubernetes. Très similaire à Docker-Machine
-**SSH**  
-À ne pas utiliser. Il existe, car il permet à Gitlab-CI de gérer l'ensemble des configurations possibles.
+- **Shell**  
+  C'est le plus simple de tous. Vos scripts seront lancés sur la machine qui possède le Runner.
+- **Parallels, VirtualBox**   
+  Le Runner va créer (ou utiliser) une machine virtuelle pour exécuter les scripts. Pratique pour avoir un environnement spécifique (exemple macOS)
+- **Docker**  
+  Utilise Docker pour créer / exécuter vos scripts et traitement (en fonction de la configuration de votre .gitlab-ci.yml)
+- **Docker Machine (auto-scaling)**  
+  Identique à docker, mais dans un environnement Docker multimachine avec auto-scaling.
+- **Kubernetes**
+  Lance vos builds dans un cluster Kubernetes. Très similaire à Docker-Machine
+- **SSH**  
+  À ne pas utiliser. Il existe, car il permet à Gitlab-CI de gérer l'ensemble des configurations possibles.
 
 ---
-Création du fichier ``.gitlab-ci.yaml``   
+
+## Création du fichier ``.gitlab-ci.yaml``   
 ```
 stages:
   - build
