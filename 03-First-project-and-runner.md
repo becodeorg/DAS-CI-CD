@@ -22,6 +22,7 @@ say_hello:
   script:
     - echo "Hello DAS!"
 ```
+
 ---
 ### Stage 
 Les "stages" permettent d'organiser le pipeline et d'exécuter 
@@ -35,7 +36,8 @@ stages:
 ```
 
 Bon à savoir, il n'est pas obligatoire d'avoir des stages pour déclencher des jobs.
-Depuis quelques temps, gitlab permet de faire de "Stageless". 
+Depuis quelques temps, gitlab permet de faire de "Stageless".   
+
 ---
 ### Pipeline
 Chaque fois qu'un commit est effectué sur une branche surveillée (par exemple, la branche principale), 
