@@ -192,6 +192,8 @@ Si l'on veut que le runner soit utilisé par plusieurs projet, il faut décocher
 Ensuite, il faut activer le runner dans les paramètres CI//CD du dépot.
 ![](https://cdn.discordapp.com/attachments/727923649738178571/1199293028712591380/image.png?ex=65c203ab&is=65af8eab&hm=d60cbe135dcd2ca6069a57193246049de02313f1623ee1619e3b9e729088b8a8&)
 
+Il faut activer le mode en admin pour les configurés ``Admin area``
+
 ---
 
 ## Exercice
