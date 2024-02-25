@@ -1,15 +1,25 @@
 # Les Variables
 
+---
+
 # Les Différents Types de Variables dans GitLab
 
+---
 ##  Variables d'Environnement
 Les variables d'environnement sont les plus courantes dans GitLab CI/CD. Elles servent à stocker des données qui peuvent être utilisées par les scripts des jobs. Par exemple, vous pouvez définir une variable DATABASE_URL pour stocker l'URL de votre base de données. Ces variables sont accessibles dans les scripts de pipeline en utilisant la syntaxe standard des variables d'environnement, comme $DATABASE_URL dans un script shell.
+
+---
 
 ## Variables Protégées
 Les variables protégées sont d'utiles pour stocker des données sensibles qui ne doivent être utilisées que dans un environnement de production ou un environnement similaire sécurisé. Par exemple, vous pouvez avoir une clé API qui ne doit être utilisée que lors du déploiement en production.
 
+---
+
 ## Variables Masquées
 Les variables masquées sont une fonctionnalité de sécurité qui empêche la valeur de la variable d'être affichée dans les logs de GitLab. C'est particulièrement important pour les secrets, comme les mots de passe ou les clés API. Lorsqu'une variable est masquée, sa valeur est remplacée par des astérisques dans les logs d'exécution de pipeline.
+
+---
+> Création de deux variables ``$MY_MASKED_VARIABLE`` & ``$MY_PROTECTED_VARIABLE``
 
 ```
 job_example:
@@ -20,7 +30,7 @@ job_example:
     - docker
 ```
 
-<br>
+---
 
 ## Les variables predéfinies
 Les variables prédéfinies dans GitLab CI/CD sont des variables automatiquement définies par le système et mises à la disposition de vos jobs lors de l'exécution d'un pipeline. 
@@ -38,6 +48,7 @@ Les variables prédéfinies dans GitLab CI/CD sont des variables automatiquement
 
 
 * liste : https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+--- 
 
 Exemple : 
 * sans stage (juste des jobs)
@@ -54,6 +65,7 @@ end-job:
   script:
     - echo "ended !!"  
 ```
+---
 
 ## Les variables globales
 
@@ -68,6 +80,8 @@ start-job:
     - echo "$GLOBAL_VAR"
     - echo "ended !!"
 ```
+
+---
 
 ## Les Variables locales (à un job)
 
@@ -85,6 +99,8 @@ start-job:
     - echo "ended !!"
 ```
 
+---
+
 ## Les Variables local vs global
 
 ```
@@ -101,7 +117,10 @@ start-job:
     - echo "ended !!"
 ```
 
+---
+
 ## Les Variables GROUP 
 
 * group > settings > CICD > Variables
 
+---
