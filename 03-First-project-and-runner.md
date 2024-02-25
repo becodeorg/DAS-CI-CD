@@ -113,14 +113,30 @@ et pour vérifier que le runner a bien été créer :
 ```
 sudo cat /etc/gitlab-runner/config.toml
 ```
-Différence entre User-mode et system-mode
-Dans user mode, les runners que vous inscrivez ne fonctionneront que pour l'utilisateur actuel. Si vous vous connectez depuis un autre utilisateur, les exécuteurs ne seront pas disponibles pour votre pipeline et si vous essayez d'exécuter votre pipeline, cela sera  bloqué du fait qu'il n'y a aucun exécuteur disponible pour fonctionner.
 
-Dans system mode, les coureurs que vous inscrivez seront disponibles pour courir et travailler tant que la machine est allumée, quel que soit l'utilisateur à partir duquel vous vous connectez.
+## Différence entre User-mode et system-mode
+**Mode Utilisateur (User Mode) :**  
+- Portée : Le runner est spécifique à l'utilisateur qui l'a enregistré. Il ne sera accessible que pour cet utilisateur.
+- Permissions : Le runner aura les mêmes permissions que l'utilisateur qui l'a enregistré. Cela signifie qu'il peut accéder aux ressources et aux privilèges de cet utilisateur.
+
+**Mode Système (System Mode) :**  
+- Portée : Le runner est disponible pour tous les utilisateurs du système.
+- Permissions : Le runner aura généralement besoin de permissions élevées, car il peut être utilisé par n'importe quel utilisateur du système. Cela signifie qu'il peut accéder à des ressources qui nécessitent des privilèges élevés.
+
+### Avantages et inconvénients :
+**Mode Utilisateur :**  
+- Avantages : Isolation des ressources par utilisateur. Chaque utilisateur peut avoir son propre runner avec des configurations spécifiques.
+- Inconvénients : Limité à un seul utilisateur. Si plusieurs utilisateurs ont besoin d'utiliser le runner, chaque utilisateur devra enregistrer son propre runner.
+
+**Mode Système :**  
+- Avantages : Disponible pour tous les utilisateurs, ce qui peut être pratique dans certains scénarios. Un seul runner peut être utilisé par tous les utilisateurs.
+- Inconvénients : Requiert généralement des privilèges élevés, ce qui peut représenter un risque de sécurité. Toutes les configurations seront partagées entre les utilisateurs.
+
 
 ## Les tags 
 Pour que le précédent runner puisse fonctionner, nous avons coché la case ``Run untagged jobs``. 
 Pour gérer efficacement les runners, il est préférable d'utiliser les tags afin de les réutiliser tant que possible.
+
 Si l'on teste en décochant la case, les runners resteront avec le statut pending. 
 ![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/4ab591a6-da87-4dae-ad7f-eb2c00107033)
 
