@@ -89,6 +89,8 @@ Les runners sont des sous-processus qui vont se charger de faire les commandes (
 
 ---
 
+Il est donc préférable de priviliéger l'utilisation de ``docker`` 
+
 ## Création du fichier ``.gitlab-ci.yaml``   
 ```
 stages:
@@ -153,7 +155,7 @@ sudo cat /etc/gitlab-runner/config.toml
 
 ---
 
-- Pour que le précédent runner puisse fonctionner, nous avons coché la case ``Run untagged jobs``. 
+- Il est possible de lancer les runners sans les tags, pource faire il faur cocher ``Run untagged jobs`` lors de la création du projet. 
 - Pour gérer efficacement les runners, il est préférable d'utiliser les tags afin de les réutiliser tant que possible. 
 - Si l'on teste en décochant la case, les runners resteront avec le statut pending. 
 - Si l'on modifie  le fichier ```gitlab-ci.yaml```, et que l'on rajoute un tag, on peut voir que seul le job qui a un tag sera lancé.
@@ -195,7 +197,7 @@ Ensuite, il faut activer le runner dans les paramètres CI//CD du dépot.
 ## Exercice
 - Créer 2 runners **partagés**. 
 - L'un éxecutera du code shell et aura comme tag ``shell``
-- L'autre éxécutera un container docker et aura comme tag ``docker``
+- L'autre éxécutera un container docker et aura comme tag ``docker`` qui a pour image par défaut ``debian:latest``
 
 
 
