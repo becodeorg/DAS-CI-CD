@@ -94,7 +94,7 @@ Les runners sont des sous-processus qui vont se charger de faire les commandes (
   Utilise Docker pour créer / exécuter vos scripts et traitement (en fonction de la configuration de votre .gitlab-ci.yml)
 - **Docker Machine (auto-scaling)**  
   Identique à docker, mais dans un environnement Docker multimachine avec auto-scaling.
-- **Kubernetes**
+- **Kubernetes**  
   Lance vos builds dans un cluster Kubernetes. Très similaire à Docker-Machine
 - **SSH**  
   À ne pas utiliser. Il existe, car il permet à Gitlab-CI de gérer l'ensemble des configurations possibles.
