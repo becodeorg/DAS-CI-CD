@@ -1,16 +1,7 @@
 # Premier projet et création du premier runner
 ---
-## Le premier projet
-
-Création d'un projet
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/325601b4-65e1-4639-9613-c75d029671e6)
-
----
-
-On remplit les détails du projet tels que le nom, la description, et d'autres paramètres pertinents 
-et on choisit la visibilité du projet en fonction des besoins, que ce soit "Public", "Internal", ou "Private".
-
-![image](https://github.com/becodeorg/DAS-CI-CD/assets/26960886/cb08a517-9223-4d92-b26e-b9ddbac0d9be)
+## Création du premier projet
+> gitlab > New Project > test
 ---
 ## Les pipelines, jobs et stages
 ---
