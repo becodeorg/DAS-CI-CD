@@ -92,13 +92,19 @@ Tout d'abord, il faut passer en mode Admin.  Pour ce faire il faut cliquer en ba
 ---
 Il faut également déterminer le niveau d'accès de l'utilisateur.
 
+---
+
 * **Regular :**  
 Les utilisateurs réguliers ont accès à leurs propres groupes et projets dans GitLab.
 Cela signifie qu'ils peuvent travailler sur les projets auxquels ils sont associés, créer de nouveaux projets dans ces groupes, et utiliser les fonctionnalités associées à leurs projets spécifiques.
 
+---
+
 * **Administrator :**  
 Les administrateurs ont un accès illimité à tous les groupes, projets, utilisateurs et fonctionnalités de GitLab.
 Ils ont le plus haut niveau de privilèges, ce qui leur permet de configurer et de gérer l'ensemble du système GitLab, y compris les droits d'accès des autres utilisateurs.
+
+---
 
 * **External :**
 Les utilisateurs externes ne peuvent pas voir les projets internes ou privés à moins que l'accès ne leur soit explicitement accordé.
@@ -209,22 +215,40 @@ Les runners sont des sous-processus qui vont se charger de faire les commandes (
 
 ## Comment choisir ?
 
+---
+
 - **Shell**  
   C'est le plus simple de tous. Vos scripts seront lancés sur la machine qui possède le Runner.
+  
+---
+
 - **Parallels, VirtualBox**   
   Le Runner va créer (ou utiliser) une machine virtuelle pour exécuter les scripts. Pratique pour avoir un environnement spécifique (exemple macOS)
+
+---
 - **Docker**  
   Utilise Docker pour créer / exécuter vos scripts et traitement (en fonction de la configuration de votre .gitlab-ci.yml)
+
+---
+
 - **Docker Machine (auto-scaling)**  
   Identique à docker, mais dans un environnement Docker multimachine avec auto-scaling.
+
+---
+
 - **Kubernetes**  
   Lance vos builds dans un cluster Kubernetes. Très similaire à Docker-Machine
+
+---
+
 - **SSH**  
   À ne pas utiliser. Il existe, car il permet à Gitlab-CI de gérer l'ensemble des configurations possibles.
 
 ---
 
 Il est donc préférable de priviliéger l'utilisation de ``docker`` 
+
+---
 
 ## Création du fichier ``.gitlab-ci.yaml``   
 ```
@@ -265,10 +289,14 @@ sudo cat /etc/gitlab-runner/config.toml
 ---
 
 ## Différence entre User-mode et system-mode
+
+---
+
 **Mode Utilisateur (User Mode) :**  
 - Portée : Le runner est spécifique à l'utilisateur qui l'a enregistré. Il ne sera accessible que pour cet utilisateur.
 - Permissions : Le runner aura les mêmes permissions que l'utilisateur qui l'a enregistré. Cela signifie qu'il peut accéder aux ressources et aux privilèges de cet utilisateur.
 
+---
 **Mode Système (System Mode) :**  
 - Portée : Le runner est disponible pour tous les utilisateurs du système.
 - Permissions : Le runner aura généralement besoin de permissions élevées, car il peut être utilisé par n'importe quel utilisateur du système. Cela signifie qu'il peut accéder à des ressources qui nécessitent des privilèges élevés.
@@ -276,9 +304,13 @@ sudo cat /etc/gitlab-runner/config.toml
 ---
 
 ### Avantages et inconvénients :
+---
+
 **Mode Utilisateur :**  
 - Avantages : Isolation des ressources par utilisateur. Chaque utilisateur peut avoir son propre runner avec des configurations spécifiques.
 - Inconvénients : Limité à un seul utilisateur. Si plusieurs utilisateurs ont besoin d'utiliser le runner, chaque utilisateur devra enregistrer son propre runner.
+
+---
 
 **Mode Système :**  
 - Avantages : Disponible pour tous les utilisateurs, ce qui peut être pratique dans certains scénarios. Un seul runner peut être utilisé par tous les utilisateurs.
