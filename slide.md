@@ -173,6 +173,8 @@ Depuis quelques temps, gitlab permet de faire de "Stageless".
 Chaque fois qu'un commit est effectué sur une branche surveillée (par exemple, la branche principale), 
 GitLab déclenche automatiquement la création d'un nouveau pipeline. Ce pipeline est un ensemble de "jobs" organisés en "Stages" (étapes).  
 
+--- 
+
 ```
 stages:
   - build
@@ -251,6 +253,9 @@ Il est donc préférable de priviliéger l'utilisation de ``docker``
 ---
 
 ## Création du fichier ``.gitlab-ci.yaml``   
+
+---
+
 ```
 stages:
   - build
@@ -273,19 +278,19 @@ job_test:
 - On choisit le runner pour Linux. Il faut également y indiquer un tag, mais on verra plus tard comment l'utiliser.
 - Enregistrer le runner (en sudo).
 
+---
+
 ````
-sudo gitlab-runner register  --url http://34.243.1.181  --token glrt-xkoyTMSpyfEsk6-DPYLS
+sudo gitlab-runner register  --url http://<url>  --token <token>
 ````
+
+---
 
 et pour vérifier que le runner a bien été créer : 
 
 ```
 sudo cat /etc/gitlab-runner/config.toml
 ```
----
-
-
-
 ---
 
 ## Différence entre User-mode et system-mode
@@ -297,13 +302,13 @@ sudo cat /etc/gitlab-runner/config.toml
 - Permissions : Le runner aura les mêmes permissions que l'utilisateur qui l'a enregistré. Cela signifie qu'il peut accéder aux ressources et aux privilèges de cet utilisateur.
 
 ---
-**Mode Système (System Mode) :**  
+**Mode Système (System Mode) =**  
 - Portée : Le runner est disponible pour tous les utilisateurs du système.
 - Permissions : Le runner aura généralement besoin de permissions élevées, car il peut être utilisé par n'importe quel utilisateur du système. Cela signifie qu'il peut accéder à des ressources qui nécessitent des privilèges élevés.
 
 ---
 
-### Avantages et inconvénients :
+### Avantages et inconvénients 
 ---
 
 **Mode Utilisateur :**  
@@ -331,6 +336,8 @@ sudo cat /etc/gitlab-runner/config.toml
 
 Edition du fichier .gitlab-ci.yaml
 
+---
+
 ```yaml
 stages:          # List of stages for jobs, and their order of execution
   - test
@@ -339,7 +346,7 @@ hello-job:      # This job runs in the deploy stage.
   stage: test  # It only runs when *both* jobs in the test stage complete successfully.
   image: debian:latest
   tags: 
-    - docker
+    - shell
   script:
     - echo "Start..."
     - echo "*****************************************************************"
@@ -351,10 +358,17 @@ hello-job:      # This job runs in the deploy stage.
 ---
 
 ## Les runners partagés
+
+---
+
 Par défaut, les runners sont 'locked' lorsque qu'il est utilisé par un autre projet.
 ![](https://media.discordapp.net/attachments/727923649738178571/1199291526434529280/image.png)
 
+---
+
 Si l'on veut que le runner soit utilisé par plusieurs projet, il faut décocher la case. 
+
+---
 
 Ensuite, il faut activer le runner dans les paramètres CI//CD du dépot.
 ![](https://cdn.discordapp.com/attachments/727923649738178571/1199293028712591380/image.png?ex=65c203ab&is=65af8eab&hm=d60cbe135dcd2ca6069a57193246049de02313f1623ee1619e3b9e729088b8a8&)
@@ -364,22 +378,23 @@ Il faut activer le mode en admin pour les configurés ``Admin area``
 ---
 
 ## Exercice
-**Créez 1 runners partagé.**  
-- L'un exécutera du code shell et aura comme tag shell.
+- **Créez 1 runners partagé.**  
+	- L'un exécutera du code shell et aura comme tag shell.
 
-**Créer un fichier ``.gitlab-ci.yml``**
-- Avec 2 stages ``job_test`` et ``job_build``
-- Les deux jobs font un echo "Ceci est le job_test" et "Ceci est le job_build"
+
+- **Créer un fichier ``.gitlab-ci.yml``**
+	- Avec 2 stages ``job_test`` et ``job_build``
+	- Les deux jobs font un echo "Ceci est le job_test" et "Ceci est le job_build"
   
 
 
-
+---
 
 # Les Variables
 
 ---
 
-# Les Différents Types de Variables dans GitLab
+## Les Différents Types de Variables dans GitLab
 
 ---
 ##  Variables d'Environnement
@@ -396,7 +411,10 @@ Les variables protégées sont d'utiles pour stocker des données sensibles qui 
 Les variables masquées sont une fonctionnalité de sécurité qui empêche la valeur de la variable d'être affichée dans les logs de GitLab. C'est particulièrement important pour les secrets, comme les mots de passe ou les clés API. Lorsqu'une variable est masquée, sa valeur est remplacée par des astérisques dans les logs d'exécution de pipeline.
 
 ---
+
 > Création de deux variables ``$MY_MASKED_VARIABLE`` & ``$MY_PROTECTED_VARIABLE``
+
+---
 
 ```
 job_example:
@@ -404,19 +422,22 @@ job_example:
     - echo $MY_MASKED_VARIABLE  # Cette variable est protégée et ne sera pas visible dans les logs
     - echo $MY_PROTECTED_VARIABLE  # Cette variable sera visible dans les logs
   tags:
-    - docker
+    - shell
 ```
-
 ---
 
 ## Les variables predéfinies
 Les variables prédéfinies dans GitLab CI/CD sont des variables automatiquement définies par le système et mises à la disposition de vos jobs lors de l'exécution d'un pipeline. 
+
+---
 
 1. Variables relatives au pipeline :
 	- $CI_PIPELINE_ID: L'ID unique du pipeline.
 	- $CI_PIPELINE_IID: L'ID interne du pipeline.
 	- $CI_COMMIT_REF_NAME: Le nom de la branche ou de l'étiquette en cours.
 	- $CI_COMMIT_REF_PROTECTED: Indique si la branche ou l'étiquette est protégée.
+
+---
 2. Variables relatives au commit associé :
 	- $CI_COMMIT_SHA: Le SHA-1 du commit associé au pipeline.
 	- $CI_COMMIT_SHORT_SHA: La version courte (7 premiers caractères) du SHA-1 du commit.
@@ -429,6 +450,8 @@ Les variables prédéfinies dans GitLab CI/CD sont des variables automatiquement
 
 Exemple : 
 * sans stage (juste des jobs)
+
+---
 ```
 start-job: 
   tags:
@@ -446,6 +469,8 @@ end-job:
 
 ## Les variables globales
 
+---
+
 ```
 variables:
   GLOBAL_VAR: "Hello"
@@ -457,10 +482,11 @@ start-job:
     - echo "$GLOBAL_VAR"
     - echo "ended !!"
 ```
-
 ---
 
 ## Les Variables locales (à un job)
+
+---
 
 ```
 variables:
@@ -475,10 +501,10 @@ start-job:
     - echo "$LOCAL_VAR"
     - echo "ended !!"
 ```
-
 ---
 
 ## Les Variables local vs global
+---
 
 ```
 variables:
@@ -493,10 +519,11 @@ start-job:
     - echo "$VAR"
     - echo "ended !!"
 ```
-
 ---
 
 ## Les Variables GROUP 
+
+---
 
 * group > settings > CICD > Variables
 
@@ -517,18 +544,24 @@ Il existe 3 types d'architectures :
 
 Il s'agit de l'architecture la plus commune. 
 
+---
 
-		Etapes		Stage1		Stage2		Stage3
-		
-  		Jobs
-				Job1		Job3		Job5
-				Job2		Job4		Job6
-
+```
+	Etapes		Stage1		Stage2		Stage3
+	
+	Jobs
+			Job1		Job3		Job5
+			Job2		Job4		Job6
+```
 -----------------------------------------------------------------------------------------------------------------
+
 ![Basic Pipeline](https://cdn.discordapp.com/attachments/727923649738178571/1200409513354870814/image.png)
+
 -----------------------------------------------------------------------------------------------------------------
 
 **Exemple :** 
+
+---
 
 ```yaml
 stages:
@@ -551,6 +584,9 @@ job2:
 - Les jobs s'exécutent dans l'ordre défini, mais les stages peuvent être exécutées en parallèle.
 - ``needs: [job1]`` indique que le job2 dépend du job1.
 
+
+--- 
+
 ![image](https://cdn.discordapp.com/attachments/727923649738178571/1200414668406149210/image.png)
 
 -----------------------------------------------------------------------------------------------------------------
@@ -559,40 +595,57 @@ job2:
 
 ```yaml
 stages:
-  - stage1
-  - stage2
-job1:
-  stage: stage1
-  script:
-    - echo "stage1 - job1"
-    - exit 0
-  tags:
-    - docker
-job4:
-  stage: stage1
-  tags:
-    - docker
-  script:
-    - echo "stage1 - job4"
-job2:
-  stage: stage2
-  tags:
-    - docker
-  needs: [job1]
-  script:
-    - echo "stage2 - job2"
-job5:
-  stage: stage2
-  tags:
-    - docker
-  needs: [job4]
-  script:
-    - echo "stage2 - job5"
-```
+  - build
+  - test
+  - deploy
 
+default:
+  image: alpine
+
+build_a:
+  stage: build
+  script:
+    - echo "This job builds something quickly."
+
+build_b:
+  stage: build
+  script:
+    - echo "This job builds something else slowly."
+
+test_a:
+  stage: test
+  needs: [build_a]
+  script:
+    - echo "This test job will start as soon as build_a finishes."
+    - echo "It will not wait for build_b, or other jobs in the build stage, to finish."
+
+test_b:
+  stage: test
+  needs: [build_b]
+  script:
+    - echo "This test job will start as soon as build_b finishes."
+    - echo "It will not wait for other jobs in the build stage to finish."
+
+deploy_a:
+  stage: deploy
+  needs: [test_a]
+  script:
+    - echo "Since build_a and test_a run quickly, this deploy job can run much earlier."
+    - echo "It does not need to wait for build_b or test_b."
+  environment: production
+
+deploy_b:
+  stage: deploy
+  needs: [test_b]
+  script:
+    - echo "Since build_b and test_b run slowly, this deploy job will run much later."
+  environment: production
+```
 -----------------------------------------------------------------------------------------------------------------
 
 ## PARENT/ENFANTS PIPELINE
+
+---
 
 - Découper en différents fichiers ``.gitlab-ci``
 - Gestion de déclenchement suivant des répertoires spécifiques
@@ -600,6 +653,7 @@ job5:
 - Solution efficace pour le monorepo
 
 **Pipeline :**
+
 ```
 		caseA : stage1	stage2	stage3
 		caseB : stage21	stage22	stage23
@@ -609,14 +663,14 @@ job5:
 **Exemple :**
 
 ```yaml
-trigger-ui:
+trigger-a:
   trigger:
-    include: ui/.gitlab-ci.yml
+    include: projet_a/.gitlab-ci.yml
     strategy: depend
 
-trigger-backend:
+trigger-b:
   trigger:
-    include: backend/.gitlab-ci.yml
+    include: projet_b/.gitlab-ci.yml
     strategy: depend
 
 ```
@@ -627,14 +681,21 @@ le pipeline parent sera stoppé.
 --------------------------------------------------------------------------------------------------------
 
 **Exercice :**
+- Créer un nouveau repo, qui a deux dossier ui et bakend
+- Créer un pipeline parent avec 2 pipelines enfants, ui et backend.
+- Faire un echo pour le script.
+	- echo "From ui section"
+ 	- echo "From backend"
 
-- Créer un pipeline avec 2 pipelines enfants, ui et backend.
-- Faire un echo. 
-
-# Contrôle d'exécution avec rules
 ---
+# Contrôle d'exécution avec rules
+
+---
+
 Documentation GitLab : [rules](https://docs.gitlab.com/ee/ci/yaml/?query=rules)
 (L'utilisation des moits clés only, except sont dépréciés)
+
+---
 
 Le mots-clé rules est utilisé pour contrôler l'exécution des jobs.
 
@@ -649,8 +710,12 @@ Il accepte, un array avec les mots clés suivants :
 ---
 
 ## Avec des variables
+
 Tout dabord, il faut créer le variable dans ``settings> CI CD > Variables``
+
 Par exemple ``VAR:1234``.
+
+---
 ```yaml
 job:
   tags:
@@ -664,9 +729,13 @@ job:
 
 Et ensuite on lancer un pipeline sans modifier la variable.
 
+---
+
 La runner ne lance pas car la condition n'est pas remplie. Mais si l'on modifie la variable, cette fois le runner se lancera.  
 
 ![](https://media.discordapp.net/attachments/727923649738178571/1200806979023683604/image.png)
+
+---
 
 Cela fonctionne également avec les variables inclues de gitlab
 
@@ -832,6 +901,8 @@ trigger-backend:
 ### exist
 La condition exist vous permet de vérifier l'existence d'un fichier ou d'un répertoire dans le référentiel. Si le fichier ou le répertoire existe, le job est exécuté.
 
+---
+
 Voici un exemple :
 ```yaml
 job:
@@ -843,9 +914,12 @@ job:
 ```
 Dans cet exemple, le job sera exécuté uniquement si le fichier data.csv existe dans le référentiel
 
+---
 
 ### Exercice
 Créer un job qui s'éxecute uniquement si le fichier ``config.yaml``est modifié et que le fichier ``.env`` existe.
+
+---
 
 #### Réponse
 ```yaml
@@ -859,7 +933,11 @@ job:
         - .env
 ```
 
+---
+
 ## Les workflows 
+
+---
 La directive workflow permet de contrôler le déclenchement de l'ensemble du pipeline basé sur des conditions, contrairement aux règles appliquées à des jobs individuels.
 ```
 workflow:
@@ -868,7 +946,12 @@ workflow:
     - if: '$CI_COMMIT_BRANCH == "main"'
 ```
 Dans cet exemple, le pipeline est déclenché si le déclencheur est un push sur la branche principale (main).
+
+---
+
 # Docker
+
+---
 
 Créons un nouveau runner avec un tag ``docker``
 
@@ -878,12 +961,13 @@ Ensuite enregistrons le runner sur le serveur:
 sudo gitlab-runner register --url http://gitlab.das.becode
 ```
 ---
+
 Il est possible que vous rencontriez une erreur ``Could not resolve host``, il faut éditer le fichier :
 
+```
+sudo nano /etc/gitlab-runner/config.toml
+```
 
-```
- sudo nano /etc/gitlab-runner/config.toml
-```
 et rajouter la ligne suivante 
 
 ```
@@ -893,7 +977,9 @@ et rajouter la ligne suivante
     ....
     extra_hosts = ["gitlab.das.becode:20.13.147.210"]
 ```
+
 ---
+
 Et un exemple de fichier ``.gitabl-ci.yaml``  
 
 ```yaml
@@ -914,8 +1000,13 @@ job_hello_world:
 **Exercice:**
 - Créer un runner docker et un fichier gitlab-ci avec un script qui fait un echo "Hello Das"
 - Utilisez l'image ubuntu:latest
-# Les services
+
 ---
+
+# Les services
+
+---
+
 Lorsque vous configurez CI/CD, vous spécifiez une image, qui est utilisée pour créer le conteneur dans lequel vos tâches s'exécutent. Pour spécifier cette image, vous utilisez le mot-clé ``ìmage``.
 
 Vous pouvez spécifier une image supplémentaire en utilisant le mot-clé ``services``. Cette image supplémentaire est utilisée pour créer un autre conteneur, disponible pour le premier conteneur. Les deux conteneurs ont accès l'un à l'autre et peuvent communiquer lors de l'exécution du travail.
@@ -947,9 +1038,13 @@ Testing:
 Les services sont des conteneurs Docker qui peuvent être liés à vos jobs pour 
 fournir des dépendances ou des services nécessaires à l'exécution de vos tests ou de votre pipeline. 
 
+---
+
 L'utilisation de services est particulièrement utile lorsque vous souhaitez isoler votre job 
 et ses dépendances sans avoir à installer ces dépendances directement sur le runner. 
 Les services peuvent être démarrés avant l'exécution du job et arrêtés après son achèvement.
+
+---
 
 Il est également possible d'utiliser plueirurs services avec différentes versions. 
 
@@ -1049,15 +1144,39 @@ Testing:
   - docker
 
 ```
-# Cache
-Le cache des runners dans GitLab CI/CD est un mécanisme qui permet de stocker 
-et de réutiliser des fichiers ou des répertoires entre différentes exécutions 
-de jobs sur le même runner.  
+
+---
+
+## Les artefacts et cache
+---
+Il existe deux manière dans gitlab de stocker des fichiers et de les partager entre runners. 
+- Cache
+- Et les artefacts
+---
+
+---
+### Cache
+Le cache est utilisé pour stocker des fichiers ou des répertoires spécifiés afin de les réutiliser 
+entre différentes exécutions de jobs sur le même runner.
+Il s'agit d'une optimisation pour éviter de re-télécharger ou recréer des dépendances courantes.
+
+```yaml
+job:
+  script:
+    - npm install
+  cache:
+    key: "$CI_COMMIT_REF_NAME-$CI_JOB_NAME"
+    paths:
+      - node_modules/
+  ```
+
+---
 
 Cela permet d'améliorer les performances des pipelines en évitant la répétition 
 de certaines tâches, comme la compilation de dépendances ou le téléchargement de bibliothèques (comme npm). 
 
 ---
+
 ```yaml
 cache:
   key: my_cache_key
@@ -1084,8 +1203,10 @@ job2:
 
 ```
 ---
-Mais si on y ajoute une règle pour que le job1 ne s'éxécute que sur la branche main, alors le job ne poourra que s'éxécuter que si le fichier ``das.txt`` se trouve dans le cache. 
 
+Si le job échoue, alors le job échouera également à cause du fichier inexistant
+
+---
 ```yaml
 cache:
   key: my_cache_key
@@ -1112,7 +1233,9 @@ job2:
     tags:
       - docker
 ```
+
 ---
+
 Le cache se vide aussi lorsque la key change. SI on utrilise une variable comme key, un nouveau cache sera utiliser à chaque fois que le noom de la key change.
 
 ```yaml
@@ -1147,8 +1270,10 @@ j2:
     - docker
 ```
 ---
+
 ## Cache par Politique de Versions :
 
+---
 La directive policy permet de spécifier une politique de cache, qui définit comment les caches doivent être gérés lors des différentes étapes du pipeline. Il existe trois valeurs possibles, pull, push et les deux combinés pull-push
 
 - pull : Indique que le cache doit être téléchargé depuis un cache partagé ou distant avant l'exécution du job.
@@ -1185,6 +1310,7 @@ j1-2:
   tags:
     - docker
 ```
+---
 
 Comme on a fait que un pull, il n'a pas mise à jour le cache et du coup il est indisponnible pour le second job.
 Editons le fichier et mettons le polycy avec la valeur push 
@@ -1219,51 +1345,10 @@ j1-2:
   tags:
     - docker
 ```
----
 
-## Pratiques recommandées pour la getsion du cache
-Pour garantir une disponibilité maximale du cache, effectuez une ou plusieurs des actions suivantes :
-
-* Étiquetez vos runners et utilisez l'étiquette sur les jobs qui partagent le cache.
-* Utilisez des runners disponibles uniquement pour un projet particulier.
-* Configurer un cache différent pour chaque branche.
 
 ---
- Pour que les runners fonctionnent efficacement avec les caches, vous devez effectuer l'une des actions suivantes :
 
-* Utilisez un seul runner pour l'ensemble de vos jobs.
-* Utilisez plusieurs runners avec une mise en cache distribuée, où le cache est stocké dans des compartiments S3. Les runners partagés sur GitLab.com fonctionnent de cette manière. Ces runners peuvent être en mode d'auto-échelle, mais ce n'est pas obligatoire. Pour gérer les objets du cache, appliquez des règles de cycle de vie pour supprimer les objets du cache après une période donnée. Les règles de cycle de vie sont disponibles sur le serveur de stockage d'objets.
-* Utilisez plusieurs runners avec la même architecture et faites en sorte que ces runners partagent un répertoire commun monté en réseau pour stocker le cache. Ce répertoire doit utiliser NFS ou quelque chose de similaire. Ces runners doivent être en mode d'auto-échelle.
----
-# Les artefacts 
-Il existe deux manière dans gitlab de stocker des fichiers et de les partager entre runners. 
-- Cache
-- Et les artefacts
-
----
-## En quoi le cache est différent des artefacts
-- Utilisez le cache pour les dépendances, comme les packages que vous téléchargez sur Internet. Le cache est stocké là où GitLab Runner est installé.
-- Utilisez des artefacts pour transmettre les résultats de construction intermédiaires entre les étapes. Les artefacts sont générés par une tâche, stockés dans GitLab et peuvent être téléchargés.
-- **Durée de Vie :** Le cache persiste sur le runner entre les exécutions de jobs, tandis que les artefacts ne sont disponibles que pour la durée d'un pipeline.
-
-Les artefacts et les caches définissent leurs chemins par rapport au répertoire du projet et ne peuvent pas créer de lien vers des fichiers extérieurs à celui-ci.
-
----
-### Cache
-Le cache est utilisé pour stocker des fichiers ou des répertoires spécifiés afin de les réutiliser 
-entre différentes exécutions de jobs sur le même runner.
-Il s'agit d'une optimisation pour éviter de re-télécharger ou recréer des dépendances courantes.
-
-```yaml
-job:
-  script:
-    - npm install
-  cache:
-    key: "$CI_COMMIT_REF_NAME-$CI_JOB_NAME"
-    paths:
-      - node_modules/
-  ```
----
 ### Artefacts
 Les artefacts sont utilisés pour stocker des fichiers ou des répertoires produits pendant l'exécution d'un job. 
 Ces fichiers sont généralement les résultats de processus de construction, de tests, ou d'autres étapes du pipeline.
@@ -1311,17 +1396,32 @@ job1:
 
 À noter que les artitacts sont téléchargeables alors que le cache ne l'est pas. 
 ![](https://cdn.discordapp.com/attachments/727923649738178571/1201192330582036580/image.png?ex=65c8ec88&is=65b67788&hm=dd3fdfa20d2e3945996bddcda1c0ba9a5224ed49373f554633ebaaf597d85d09&)
+
+---
+
+## En quoi le cache est différent des artefacts
+- Utilisez le cache pour les dépendances, comme les packages que vous téléchargez sur Internet. Le cache est stocké là où GitLab Runner est installé.
+- Utilisez des artefacts pour transmettre les résultats de construction intermédiaires entre les étapes. Les artefacts sont générés par une tâche, stockés dans GitLab et peuvent être téléchargés.
+- **Durée de Vie :** Le cache persiste sur le runner entre les exécutions de jobs, tandis que les artefacts ne sont disponibles que pour la durée d'un pipeline.
+
+Les artefacts et les caches définissent leurs chemins par rapport au répertoire du projet et ne peuvent pas créer de lien vers des fichiers extérieurs à celui-ci.
+
+---
+
 # SSH docker vers target
 ---
 
-  * créer une paire de clefs
+  * créer une paire de clefs ssh
   
   * créer un user (avec les droits souhaités)
   
   * ajouter la clef publique sur le serveur cible
 
 ---
+
 **À faire en même temps que moi**
+
+---
 
 Création d'une paire de clés (publique et privée)
 
@@ -1416,22 +1516,25 @@ job2:
 # Le registry docker 
 
 ---
+
 ## Sur l'instance gitlab
+**À faire en même temps que moi**
 
 ---
-
-**À faire en même temps que moi**
 
 On créé le certificat pour registry
 
 ```
+
 cd /etc/gitlab
-sudo openssl req   -newkey rsa:4096 -nodes -sha256 -keyout registry.das.becode.key  -addext "subjectAltName = DNS:registry.das.becode" -x509 -days 365 -out registry.das.becode.cert
+sudo openssl req  -newkey rsa:4096 -nodes -sha256 -keyout registry.das.becode.key  -addext "subjectAltName = DNS:registry.das.becode" -x509 -days 365 -out registry.das.becode.cert
+
 ```
 
 ---
 
 Il faut modifer le fichier de config de gitlab 
+
 ```
 sudo nano /etc/gitlab/gitlab.rb
 ```
@@ -1565,16 +1668,19 @@ Il faut vraiment les utilser en fonction des besoins spécifiques
 de votre organisation et de votre architecture de projet.
 
 ---
+
 # Mise en pratique avec un projet Angular 
 
+---
+
 ## Création dur projet
-(Sur votre machine)
 ```
 ng new my-super-app
 ```
 ---
 
 Pour installer et générer le fichier de configuation pour Eslint
+
 ```
 ng lint
 ```
@@ -1582,6 +1688,7 @@ ng lint
 ---
 
 On créé un nouveau dépot gitlab (Sans readme.md) et on rajoute le remote dans l'application.
+
 ```
 Push an existing Git repository
 cd existing_repo
@@ -2470,37 +2577,4 @@ Logs insuffisants permettent à un adversaire de mener des activités malveillan
 ### Recommandations
 Implémenter un monitoring qui veille à detecter toutes les attaques sur les applications web. 
 ex CrowdStrike 
-
-
-# DAS-CI-CD
-
-## Jour 1 : Automatisation Avancée avec GitLab CI/CD
-
-
-### Révision rapide de GitLab CI/CD et de ses concepts de base.
-- Concepts de base de GitLab CI/CD (30 minutes)
-   - Pipeline
-   - Jobs et stage
-   - Runners
-
-### Création d'un pipeline CI/CD pour un projet NestJS.
-
-
-- Configuration des tests automatisés pour un projet Angular.
-
-- Création d'un pipeline de déploiement avec Docker dans un environnement DEV.
-
-## Jour 2 : Personnalisation et Bonnes Pratiques
-
-- Personnalisation des runners GitLab pour répondre aux besoins spécifiques du projet.
-
-- Planification avancée (scheduling) pour les tests E2E.
-
-**Après-midi : Sécurité et Bonnes Pratiques**
-
-- Configuration de la sécurité du référentiel GitLab, y compris les branches protégées et les revues de code.
-
-- Bonnes pratiques en CI/CD, discussions sur la manière d'optimiser les pipelines.
-
-- Pentest d’un pipeline vulnérable.
 
