@@ -7,14 +7,31 @@
 Connectez vous à la vm.
 
 ```
-ssh admin@YOUR-IP -i userX.pem
+ssh azureuser@YOUR-IP -i userX.pem
 ```
 
-- IP User 1  
-- IP User 2
-- IP User 3
-- IP User 4
-- IP User 5  
+**Login gitlab:** root:Test1234!
+
+- Maxime :
+    - Gitlab Instance : http://20.13.171.42
+    - Runner 1 : 20.13.167.219
+    - Runner 2 : 98.71.17.199
+- Karim :
+    - Gitlab Instance : http://20.123.64.161 
+    - Runner 1 : 20.123.65.171
+    - Runner 2 : 20.13.166.86
+- Arthur :
+    - Gitlab Instance : http://98.71.16.171
+    - Runner 1 : 98.71.16.252
+    - Runner 2 : 20.13.160.111
+- Sébastien :
+    - Gitlab Instance : http://20.13.166.211
+    - Runner 1 : 20.13.168.58
+    - Runner 2 : 20.13.168.66
+- Benjamin :
+    - Gitlab Instance : http://20.13.168.224
+    - Runner 1 : 20.13.169.28
+    - Runner 2 : 52.158.40.20
 
 user : admin
 
