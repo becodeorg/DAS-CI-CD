@@ -35,6 +35,8 @@ ssh azureuser@YOUR-IP -i userX.pem
     - Runner 2 : 20.93.21.178
     - Goat : 40.113.34.255
 
+https://becodeorg.github.io/DAS-CI-CD/slide/
+
 **Documentation :** 
 - [Installation sur debian](https://about.gitlab.com/install/#debian)
 - [Next Steps](https://docs.gitlab.com/ee/install/next_steps.html)
