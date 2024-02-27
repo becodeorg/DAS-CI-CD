@@ -1,9 +1,5 @@
 # Installation de Gitlab 
 
-**Minimum requirement :**
-- 4 core CPU
-- 4 G de ram
-
 Connectez vous à la vm.
 
 > Login gitlab: root:Test1234!
