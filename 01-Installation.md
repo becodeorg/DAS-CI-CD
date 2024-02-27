@@ -10,7 +10,7 @@ Connectez vous à la vm.
 ssh azureuser@YOUR-IP -i userX.pem
 ```
 
-**Login gitlab:** root:Test1234!
+> Login gitlab: root:Test1234!
 
 - Maxime :
     - Gitlab Instance : http://20.13.171.42
