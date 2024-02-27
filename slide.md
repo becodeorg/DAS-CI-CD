@@ -1814,7 +1814,7 @@ docker_build:
 
 ## deploy 
 
-Il faut créer un nouveau runner.
+Il faut créer un nouveau runner ``prod``
 
 ```yaml
 deploy_prod:
@@ -1840,6 +1840,7 @@ deploy_prod:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual
 ```
+
 ---
 # NestJS
 
@@ -1851,7 +1852,11 @@ Créer un pipeline pour NestJS.
 * quality : Test unitaire et lint
 * build : Compilation de l'application et push sur docker
 * deploy : Deployement sur un serveur avec docker
+
+---
+
 ## Les Environnements GitLab CI/CD
+
 ---
 Dans gitlab, il existe deux types d'environnements :
 
@@ -1902,11 +1907,12 @@ deploy_review:
     - when: always
 ```
 ---
+
 ### Exercice 1
 - Utilisez la clause ``variables`` pour définir la variable DEPLOY_ENV avec la valeur par défaut "review/$CI_COMMIT_SHORT_SHA".
 - Utilisez la clause workflow avec des règles pour définir les conditions suivantes :
-    - Si la branche est "main", alors DEPLOY_ENV doit être "production".
-    - Si la branche est une branche de fonctionnalité (matchant avec "feature-*"), alors DEPLOY_ENV doit être "dev".
+    - Si la branche est "main", alors la valeur de DEPLOY_ENV doit être "production".
+    - Si la branche est une branche de création de fonctionnalité (matchant avec "feature-*"), alors DEPLOY_ENV doit être "dev".
     - Si la branche est "staging", alors DEPLOY_ENV doit être "staging".
     - Si le déclencheur de pipeline est une planification (schedule), le déploiement doit être ignoré.
 ---
@@ -2052,6 +2058,8 @@ deploy_staging:
     
 
 ```
+---
+
 # SAST - DAST
 
 La sécurité dans le pipepline CI / CD
@@ -2072,6 +2080,7 @@ Le template gitlab est basé sur l'utilisation de Semgrep. Il fonctionne en util
 Test dynamique de sécurité des applications (Dynamic application security testing, DAST). Permet aux experts en tests de sécurité d’examiner une build en cours d’exécution et de détecter les problèmes de configuration, de traitement des erreurs, d’entrées et de sorties de l’application, etc. Les test dast s'effectue toujours sur un environnement de testet jamais en production.
 
 ---
+
 ```yaml
 stages:
   - security
@@ -2107,17 +2116,17 @@ run-dast-job:
 Test interactif de sécurité des applications (interactive application security testing, IAST). Combine les techniques SAST et DAST afin d’en tirer les avantages clés.
 
 ---
-# Les pipelines planifiés
 
+# Les pipelines planifiés
 Utilisez des pipelines planifiés pour exécuter des pipelines GitLab CI/CD à intervalles réguliers.
+---
 
 ## Conditions préalables
 Pour qu'un pipeline planifié s'exécute :
 
-- Le propriétaire du planning doit avoir le rôle Développeur. Pour les pipelines sur des branches protégées, le propriétaire de la planification doit être autorisé à fusionner avec la branche.
-- Le .gitlab-ci.ymlfichier doit avoir une syntaxe valide.
-- 
-Sinon, le pipeline n'est pas créé. Aucun message d'erreur ne s'affiche.
+- Le propriétaire du de la tache planifié doit avoir le rôle Développeur/admin. Pour les pipelines sur des branches protégées, le propriétaire de la planification doit être autorisé à fusionner avec la branche.
+- Le .gitlab-ci.yml fichier doit avoir une syntaxe valide.
+- Sinon, le pipeline n'est pas créé. Aucun message d'erreur ne s'affiche.
 
 ---
 
@@ -2154,16 +2163,19 @@ scan-security:
       - echo "Ceci est un pipeleine déclenché periodiquement"
 
 ```
-
+----
   
 # Optimiser votre fichier gitlab-ci.yml
 
+---
 Vous pouvez réduire la complexité et la configuration en double dans vos fichiers de configuration GitLab CI/CD en utilisant :
 
 - Les ancres (&)
 - Les alias (*)
 - map merging
 - Le mot-clé extends
+
+---
 
 ## Les ancres 
 Si des bouts de code se répète, on peut utiliser les ancres pour éviter les doublons.
@@ -2194,6 +2206,8 @@ test2:
     - test2 project
 ```
 
+---
+
 Devient : 
 
 ```yaml
@@ -2213,6 +2227,7 @@ test2:
   script:
     - echo "test 2"
 ```
+----
 
 ### Les ancres pour les scripts 
 
@@ -2248,10 +2263,14 @@ job2:
     - *some-script-after
 ```
 
+---
+
 ## Extends
 
 Vous pouvez utiliser le mot-clé ``extends`` pour réutiliser la configuration dans plusieurs tâches. 
 C'est similaire aux ancres YAML, mais plus simple et vous pouvez l'utiliser extends avec includes.
+
+---
 
 ```yaml
 .tests:
@@ -2283,9 +2302,12 @@ spinach:
     - docker
 ```
 
-## Utiliser extends et include ensemble
-Pour réutiliser la configuration de différents fichiers de configuration, combinez extendset include.
+---
 
+## Utiliser extends et include ensemble
+Pour réutiliser la configuration de différents fichiers de configuration, combinez extends et include.
+
+--
 Dans l'exemple suivant, le script est défini dans le fichier included.yml. Puis, dans le fichier .gitlab-ci.yml, extends fait référence au contenu du script:
 
 - included.yml
@@ -2303,9 +2325,11 @@ useTemplate:
   image: alpine
   extends: .template
 ```
-
+---
 ## La balise !reference
 La balise ``!reference`` permet de sélectionner la configuration des mots clés dans d'autres sections de travail et réutilisez-la dans la section actuelle. Contrairement aux ancres YAML , vous pouvez également utiliser !referencedes balises pour réutiliser la configuration des fichiers de configuration inclus.
+
+---
 
 **setup.yml:**  
 ```
@@ -2330,12 +2354,17 @@ test:
   after_script:
     - !reference [.teardown, after_script]
 ```
+
+---
+
 # OWASP Top 10 CI/CD Security Risks
+
+---
 
 ![](https://owasp.org/www-project-top-10-ci-cd-security-risks/assets/images/risks.png)
 [Source : Owasp](https://owasp.org/www-project-top-10-ci-cd-security-risks/CICD-SEC-01-Insufficient-Flow-Control-Mechanisms)
 
-
+---
 ## CICD-SEC-1: Insufficient Flow Control Mechanisms
 
 Les mécanismes de contrôle de flux insuffisants font référence à la capacité
