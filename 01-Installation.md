@@ -29,8 +29,11 @@ ssh azureuser@YOUR-IP -i userX.pem
     - Gitlab Instance : http://20.13.168.224
     - Runner 1 : 20.13.169.28
     - Runner 2 : 52.158.40.20
-
-user : admin
+- Ludo 
+    - Gitlab : 20.13.147.210
+    - Runner 1 : 20.123.81.139
+    - Runner 2 : 20.93.21.178
+    - Goat : 40.113.34.255
 
 **Documentation :** 
 - [Installation sur debian](https://about.gitlab.com/install/#debian)
