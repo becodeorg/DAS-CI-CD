@@ -329,13 +329,13 @@ sudo cat /etc/gitlab-runner/config.toml
 
 **Mode Utilisateur :**  
 - Avantages : Isolation des ressources par utilisateur. Chaque utilisateur peut avoir son propre runner avec des configurations spécifiques.
-- Inconvénients : Limité à un seul utilisateur. Si plusieurs utilisateurs ont besoin d'utiliser le runner, chaque utilisateur devra enregistrer son propre runner et les tâches doivent être exécutées manuellement à l'aide de ``gitlab-runner run``
+- Inconvénients : Limité à un seul utilisateur. Si plusieurs utilisateurs ont besoin d'utiliser le runner, chaque utilisateur devra enregistrer son propre runner. Toutes les configurations seront partagées entre les utilisateurs et les tâches doivent être exécutées manuellement à l'aide de ``gitlab-runner run``
 
 ---
 
 **Mode Système :**  
 - Avantages : Disponible pour tous les utilisateurs, ce qui peut être pratique dans certains scénarios. Un seul runner peut être utilisé par tous les utilisateurs.
-- Inconvénients : Requiert généralement des privilèges élevés, ce qui peut représenter un risque de sécurité. Toutes les configurations seront partagées entre les utilisateurs 
+- Inconvénients : Requiert généralement des privilèges élevés, ce qui peut représenter un risque de sécurité. 
 
 ---
 
