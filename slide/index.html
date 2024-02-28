@@ -2389,6 +2389,15 @@ processus CI/CD à pousser à lui seul du code malveillant ou des artefacts dans
 en raison d'un manque de mécanismes qui imposent une approbation ou un examen supplémentaire.
 
 ---
+**Exemple :**
+Contourner les règles de Merge automatique dans Homebrew, par RyotaK (le hacker). 
+Une règle de merge automatique utilisée pour fusionner des modifications 
+insignifiantes dans la branche principale était susceptible d'être contournée, 
+permettant aux adversaires de fusionner du code malveillant dans le projet.
+
+https://brew.sh/2021/04/21/security-incident-disclosure/
+
+---
 Exemple : 
 L’exécution d’analyses de sécurité dans les pipelines CI est une pratique courante. Checkov, un outil d'analyse de code statique pour IaC, est un exemple connu d'un tel scanner.
 
